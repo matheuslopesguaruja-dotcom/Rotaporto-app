@@ -10,7 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- SheetJS (Leitor de Planilhas Excel com Suporte a Criptografia/Senha) -->
+    <!-- SheetJS (Leitor de Planilhas Excel) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
@@ -39,7 +39,7 @@
 </head>
 <body class="bg-brand-light text-gray-800 flex h-screen overflow-hidden">
 
-    <!-- Sidebar (Menu Lateral Estilo Software Europeu/EUA) -->
+    <!-- Sidebar (Menu Lateral) -->
     <aside class="w-64 bg-brand-900 text-white flex flex-col shadow-2xl z-20">
         <div class="h-16 flex items-center justify-center border-b border-brand-800">
             <h1 class="text-2xl font-bold tracking-wider text-white">
@@ -48,27 +48,27 @@
         </div>
         
         <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
-            <a href="#" onclick="showTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors bg-brand-800 border-l-4 border-brand-accent text-white">
+            <a href="javascript:void(0)" onclick="showTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors bg-brand-800 border-l-4 border-brand-accent text-white">
                 <i class="fa-solid fa-chart-pie w-6"></i>
                 <span class="font-medium">Dashboard Geral</span>
             </a>
             
-            <a href="#" onclick="showTab('frete')" id="nav-frete" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
+            <a href="javascript:void(0)" onclick="showTab('frete')" id="nav-frete" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
                 <i class="fa-solid fa-route w-6"></i>
                 <span class="font-medium">Consulta de Frete (Suape 6.9)</span>
             </a>
 
-            <a href="#" onclick="showTab('pagamentos')" id="nav-pagamentos" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
+            <a href="javascript:void(0)" onclick="showTab('pagamentos')" id="nav-pagamentos" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
                 <i class="fa-solid fa-money-check-dollar w-6"></i>
                 <span class="font-medium">Pagamentos (Fixo/Agreg)</span>
             </a>
 
-            <a href="#" onclick="showTab('erros')" id="nav-erros" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
+            <a href="javascript:void(0)" onclick="showTab('erros')" id="nav-erros" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
                 <i class="fa-solid fa-triangle-exclamation w-6"></i>
                 <span class="font-medium">Erros de Emissão</span>
             </a>
 
-            <a href="#" onclick="showTab('tutoriais')" id="nav-tutoriais" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
+            <a href="javascript:void(0)" onclick="showTab('tutoriais')" id="nav-tutoriais" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
                 <i class="fa-solid fa-book w-6"></i>
                 <span class="font-medium">Tutoriais e Manuais</span>
             </a>
@@ -177,7 +177,7 @@
                 </div>
             </section>
 
-            <!-- 2. CONSULTA DE FRETE (INTEGRADO COM TABELA SUAPE 6.9 E DESBLOQUEIO) -->
+            <!-- 2. CONSULTA DE FRETE -->
             <section id="frete" class="tab-content">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
                     <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 mb-4 border-b border-gray-100 gap-4">
@@ -186,7 +186,6 @@
                             <p class="text-sm text-gray-500">Base Ativa: Tabela Oficial 6.9 - Inclusão Terminal Suape (PE)</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
-                            <!-- Input para Desbloqueio e Importação de Excel Protegido -->
                             <div class="flex items-center space-x-2 bg-gray-50 p-1.5 rounded-lg border border-gray-200">
                                 <input type="password" id="input-senha-excel" placeholder="Senha (ADM2026/ADMIN)" value="ADM2026" class="px-3 py-1.5 text-xs border border-gray-300 rounded outline-none w-36 focus:ring-1 focus:ring-brand-accent">
                                 <label for="excel-file" class="cursor-pointer bg-green-600 hover:bg-green-700 text-white font-medium py-1.5 px-3 rounded text-xs transition-colors flex items-center">
@@ -229,7 +228,7 @@
                     </form>
                 </div>
 
-                <!-- Tabela Dinâmica com Dados Oficiais do Excel -->
+                <!-- Tabela Dinâmica -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                         <h3 class="font-semibold text-brand-900">Valores Oficiais de Fretes de Saída</h3>
@@ -374,12 +373,15 @@
         </div>
     </main>
 
-    <!-- Script de Integração e Desbloqueio da Tabela Excel -->
+    <!-- Script Corrigido -->
     <script>
-        // CONFIGURAÇÕES DO SUPABASE
         const supabaseUrl = 'https://mvyujpxkzsonlfyvvims.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12eXVqcHhrenNvbmxmeXZ2aW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NTc2MjYsImV4cCI6MjEwODMzMzYyNn0.vpMp5BYmVwRXgmz3vShm0gO2estfuRkZ0ezaS9D1lfE';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        
+        let supabaseClient = null;
+        if (window.supabase && typeof window.supabase.createClient === 'function') {
+            supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        }
 
         const titulos = {
             'dashboard': 'Dashboard Geral',
@@ -389,7 +391,6 @@
             'tutoriais': 'Central de Tutoriais e Manuais'
         };
 
-        // BASE DE DADOS OFICIAL DESBLOQUEADA DA PLANILHA (SUAPE 6.9)
         let baseFretes = [
             { origem: 'Suape (PE)', destino: 'Recife', uf: 'PE', veiculo: 'Carreta 3 Eixos', km: '55', valor: '1.250,00', status: 'Suape 6.9 Oficial' },
             { origem: 'Suape (PE)', destino: 'Cabo de Santo Agostinho', uf: 'PE', veiculo: 'Truck', km: '20', valor: '850,00', status: 'Suape 6.9 Oficial' },
@@ -408,11 +409,17 @@
             { origem: 'Paranaguá (PR)', destino: 'Curitiba', uf: 'PR', veiculo: 'Truck', km: '90', valor: '1.950,00', status: 'Tabela Padrão' }
         ];
 
-        // Troca de Abas
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById('page-title').innerText = titulos[tabId];
+            const target = document.getElementById(tabId);
+            if (target) {
+                target.classList.add('active');
+            }
+            
+            const pageTitle = document.getElementById('page-title');
+            if (pageTitle && titulos[tabId]) {
+                pageTitle.innerText = titulos[tabId];
+            }
             
             document.querySelectorAll('.nav-item').forEach(el => {
                 el.classList.remove('bg-brand-800', 'border-brand-accent', 'text-white');
@@ -426,13 +433,14 @@
             }
         }
 
-        // Renderização de Tabela de Fretes
         function renderizarTabelaFretes(lista) {
             const tbody = document.getElementById('tabela-fretes-body');
             const total = document.getElementById('total-registros');
+            if (!tbody) return;
+
             tbody.innerHTML = '';
 
-            if (lista.length === 0) {
+            if (!lista || lista.length === 0) {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="7" class="py-8 text-center text-gray-500">
@@ -441,7 +449,7 @@
                         </td>
                     </tr>
                 `;
-                total.innerText = '0 rotas encontradas';
+                if (total) total.innerText = '0 rotas encontradas';
                 return;
             }
 
@@ -461,14 +469,13 @@
                 `;
             });
 
-            total.innerText = `Exibindo ${lista.length} de ${baseFretes.length} rotas da Tabela Suape 6.9`;
+            if (total) total.innerText = `Exibindo ${lista.length} de ${baseFretes.length} rotas da Tabela Suape 6.9`;
         }
 
-        // Filtro em Tempo Real
         function filtrarFretes() {
-            const origemSel = document.getElementById('select-origem').value.toLowerCase();
-            const destinoInput = document.getElementById('input-destino').value.toLowerCase().trim();
-            const veiculoSel = document.getElementById('select-veiculo').value.toLowerCase();
+            const origemSel = (document.getElementById('select-origem')?.value || '').toLowerCase();
+            const destinoInput = (document.getElementById('input-destino')?.value || '').toLowerCase().trim();
+            const veiculoSel = (document.getElementById('select-veiculo')?.value || '').toLowerCase();
 
             const filtrados = baseFretes.filter(f => {
                 const bateOrigem = !origemSel || f.origem.toLowerCase().includes(origemSel);
@@ -480,17 +487,15 @@
             renderizarTabelaFretes(filtrados);
         }
 
-        // Importação e Desbloqueio da Planilha Protegida
         function importarPlanilhaProtegida(event) {
             const file = event.target.files[0];
-            const senha = document.getElementById('input-senha-excel').value || 'ADM2026';
+            const senha = document.getElementById('input-senha-excel')?.value || 'ADM2026';
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = new Uint8Array(e.target.result);
-                    // Passa a senha para desbloquear a planilha se estiver protegida
                     const workbook = XLSX.read(data, { type: 'array', password: senha });
 
                     const firstSheetName = workbook.SheetNames[0];
@@ -521,20 +526,19 @@
                     if (novosFretes.length > 0) {
                         baseFretes = novosFretes;
                         renderizarTabelaFretes(baseFretes);
-                        alert(`Planilha desbloqueada com a senha '${senha}'! ${novosFretes.length} rotas carregadas.`);
+                        alert(`Planilha lida com sucesso! ${novosFretes.length} rotas carregadas.`);
                     }
                 } catch (err) {
                     console.error(err);
-                    alert(`Falha ao abrir a planilha com a senha '${senha}'. Teste alternar entre ADM2026 e ADMIN no campo de senha.`);
+                    alert(`Falha ao abrir a planilha com a senha '${senha}'. Tente alternar a senha no campo.`);
                 }
             };
             reader.readAsArrayBuffer(file);
         }
 
-        // Inicialização
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', function() {
             renderizarTabelaFretes(baseFretes);
-        };
+        });
     </script>
 </body>
 </html>
