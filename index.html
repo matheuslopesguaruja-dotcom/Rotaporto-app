@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RotaPorto | Gestão Administrativa e Logística</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para Ícones -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Biblioteca do Supabase -->
+    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    
     <script>
         tailwind.config = {
             theme: {
@@ -49,68 +50,310 @@
                 <i class="fa-solid fa-chart-pie w-6"></i>
                 <span class="font-medium">Dashboard Geral</span>
             </a>
+            
             <a href="#" onclick="showTab('frete')" id="nav-frete" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
                 <i class="fa-solid fa-route w-6"></i>
                 <span class="font-medium">Consulta de Frete</span>
             </a>
+
             <a href="#" onclick="showTab('pagamentos')" id="nav-pagamentos" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
                 <i class="fa-solid fa-money-check-dollar w-6"></i>
                 <span class="font-medium">Pagamentos (Fixo/Agreg)</span>
             </a>
+
+            <a href="#" onclick="showTab('erros')" id="nav-erros" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
+                <i class="fa-solid fa-triangle-exclamation w-6"></i>
+                <span class="font-medium">Erros de Emissão</span>
+            </a>
+
+            <a href="#" onclick="showTab('tutoriais')" id="nav-tutoriais" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
+                <i class="fa-solid fa-book w-6"></i>
+                <span class="font-medium">Tutoriais e Manuais</span>
+            </a>
         </nav>
         
         <div class="p-4 border-t border-brand-800 text-sm text-gray-400">
+            <div class="flex items-center space-x-3 mb-3">
+                <img src="https://ui-avatars.com/api/?name=Admin+Log&background=4793AF&color=fff" alt="User" class="w-10 h-10 rounded-full">
+                <div>
+                    <p class="text-white font-medium">Administrador</p>
+                    <p class="text-xs">Logística Portuária</p>
+                </div>
+            </div>
             <p>&copy; 2026 RotaPorto</p>
         </div>
     </aside>
 
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-screen relative overflow-y-auto">
+        <!-- Header -->
         <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 sticky top-0">
             <h2 class="text-xl font-semibold text-brand-900" id="page-title">Dashboard Geral</h2>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-400 hover:text-brand-accent transition"><i class="fa-solid fa-bell text-xl"></i></button>
+                <button class="text-gray-400 hover:text-brand-accent transition"><i class="fa-solid fa-gear text-xl"></i></button>
+            </div>
         </header>
 
         <div class="p-8">
+
             <!-- 1. DASHBOARD GERAL -->
             <section id="dashboard" class="tab-content active">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-                    <h3 class="text-lg font-semibold text-brand-900 mb-2">Bem-vindo ao Sistema RotaPorto</h3>
-                    <p class="text-gray-600">O seu banco de dados Supabase foi configurado com sucesso e está pronto para receber dados.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Emissões Totais (Mês)</p>
+                            <p class="text-3xl font-bold text-brand-900 mt-2">1.245</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 text-xl">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Emissões Totais (Ano)</p>
+                            <p class="text-3xl font-bold text-brand-900 mt-2">14.890</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600 text-xl">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Erros Corrigidos</p>
+                            <p class="text-3xl font-bold text-brand-900 mt-2">89</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-600 text-xl">
+                            <i class="fa-solid fa-bug-slash"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                        <h3 class="font-semibold text-brand-900">Emissões por Colaborador</h3>
+                        <span class="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-medium">Base de Dados Ligada</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-white text-gray-500 text-sm border-b">
+                                    <th class="py-4 px-6 font-medium">Colaborador</th>
+                                    <th class="py-4 px-6 font-medium">Setor</th>
+                                    <th class="py-4 px-6 font-medium text-center">Emissões no Mês</th>
+                                    <th class="py-4 px-6 font-medium text-center">Emissões no Ano</th>
+                                    <th class="py-4 px-6 font-medium text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700 text-sm">
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="py-4 px-6 font-medium flex items-center"><img src="https://ui-avatars.com/api/?name=Carlos+Silva&background=random" class="w-8 h-8 rounded-full mr-3"> Carlos Silva</td>
+                                    <td class="py-4 px-6">Faturamento</td>
+                                    <td class="py-4 px-6 text-center font-semibold text-brand-900">342</td>
+                                    <td class="py-4 px-6 text-center">4.105</td>
+                                    <td class="py-4 px-6 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">Meta Atingida</span></td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="py-4 px-6 font-medium flex items-center"><img src="https://ui-avatars.com/api/?name=Ana+Pereira&background=random" class="w-8 h-8 rounded-full mr-3"> Ana Pereira</td>
+                                    <td class="py-4 px-6">Operacional</td>
+                                    <td class="py-4 px-6 text-center font-semibold text-brand-900">289</td>
+                                    <td class="py-4 px-6 text-center">3.890</td>
+                                    <td class="py-4 px-6 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">Meta Atingida</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="py-4 px-6 font-medium flex items-center"><img src="https://ui-avatars.com/api/?name=Roberto+Gomes&background=random" class="w-8 h-8 rounded-full mr-3"> Roberto Gomes</td>
+                                    <td class="py-4 px-6">Administrativo</td>
+                                    <td class="py-4 px-6 text-center font-semibold text-brand-900">115</td>
+                                    <td class="py-4 px-6 text-center">1.250</td>
+                                    <td class="py-4 px-6 text-center"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium">Atenção</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
             <!-- 2. CONSULTA DE FRETE -->
             <section id="frete" class="tab-content">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
-                    <h3 class="text-lg font-semibold text-brand-900 mb-4">Módulo de Consulta de Rotas</h3>
-                    <p class="text-gray-500 mb-4">Base ativa: BUSCA FRETE OFICIAL 6.9 - INCLUSAO SUAPE.xlsx</p>
-                    <button class="bg-brand-accent text-white font-medium py-2 px-4 rounded-lg">Buscar Rota</button>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-brand-900">Módulo de Consulta de Rotas e Fretes</h3>
+                        <div class="flex items-center space-x-2 text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+                            <i class="fa-solid fa-file-excel"></i>
+                            <span class="font-medium">Base ativa: BUSCA FRETE OFICIAL 6.9 - INCLUSAO SUAPE.xlsx</span>
+                        </div>
+                    </div>
+                    
+                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Origem (Porto/Terminal)</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-accent outline-none">
+                                <option>Suape (PE)</option>
+                                <option>Santos (SP)</option>
+                                <option>Paranaguá (PR)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Destino</label>
+                            <input type="text" id="input-destino" placeholder="Cidade ou CEP..." class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-accent outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Veículo/Carga</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-accent outline-none">
+                                <option>Carreta 3 Eixos</option>
+                                <option>Bitrem</option>
+                                <option>Container 40ft</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" onclick="buscarFreteExemplo()" class="w-full bg-brand-accent hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex justify-center items-center">
+                                <i class="fa-solid fa-magnifying-glass mr-2"></i> Buscar Rota
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50">
+                        <h3 class="font-semibold text-brand-900">Resultados da Consulta</h3>
+                    </div>
+                    <div id="resultado-frete" class="p-8 text-center text-gray-500">
+                        <i class="fa-solid fa-table-list text-4xl mb-3 text-gray-300"></i>
+                        <p>Preencha os filtros acima para consultar os valores da tabela oficial de Suape.</p>
+                    </div>
                 </div>
             </section>
 
             <!-- 3. PAGAMENTOS -->
             <section id="pagamentos" class="tab-content">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 class="text-lg font-semibold text-brand-900 mb-4">Gestão de Pagamentos</h3>
-                    <button class="bg-brand-900 text-white px-4 py-2 rounded-lg text-sm">Novo Lançamento</button>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-brand-900">Lançamento de Pagamentos (Fixo / Agregado)</h3>
+                    <button class="bg-brand-900 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-800"><i class="fa-solid fa-plus mr-1"></i> Novo Lançamento</button>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 text-sm border-b">
+                                <th class="py-3 px-6 font-medium">Data Ref.</th>
+                                <th class="py-3 px-6 font-medium">Motorista / Transportadora</th>
+                                <th class="py-3 px-6 font-medium">Categoria</th>
+                                <th class="py-3 px-6 font-medium">Placa</th>
+                                <th class="py-3 px-6 font-medium text-right">Valor (R$)</th>
+                                <th class="py-3 px-6 font-medium text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 text-sm">
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-6">23/10/2026</td>
+                                <td class="py-3 px-6 font-medium">José Bonifácio</td>
+                                <td class="py-3 px-6"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">Fixo</span></td>
+                                <td class="py-3 px-6">ABC-1234</td>
+                                <td class="py-3 px-6 text-right font-medium">R$ 3.500,00</td>
+                                <td class="py-3 px-6 text-center"><i class="fa-solid fa-circle-check text-green-500" title="Pago"></i></td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-6">23/10/2026</td>
+                                <td class="py-3 px-6 font-medium">Logística Silva LTDA</td>
+                                <td class="py-3 px-6"><span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold">Agregado</span></td>
+                                <td class="py-3 px-6">XYZ-9876</td>
+                                <td class="py-3 px-6 text-right font-medium">R$ 1.250,00</td>
+                                <td class="py-3 px-6 text-center"><i class="fa-solid fa-clock text-yellow-500" title="Pendente"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
+
+            <!-- 4. ERROS DE EMISSÃO -->
+            <section id="erros" class="tab-content">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                        <h3 class="font-semibold text-brand-900">Consulta de Erros de Emissão</h3>
+                    </div>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-white text-gray-500 text-sm border-b">
+                                <th class="py-3 px-6 font-medium">Doc / Nº</th>
+                                <th class="py-3 px-6 font-medium">Colaborador</th>
+                                <th class="py-3 px-6 font-medium">Descrição do Erro (SEFAZ/Interno)</th>
+                                <th class="py-3 px-6 font-medium text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 text-sm">
+                            <tr class="border-b bg-red-50/30">
+                                <td class="py-3 px-6 font-medium text-red-600">CT-e 99823</td>
+                                <td class="py-3 px-6">Carlos Silva</td>
+                                <td class="py-3 px-6 text-red-500 font-medium">Rejeição: RNTRC do transportador inválido.</td>
+                                <td class="py-3 px-6 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Pendente</span></td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-3 px-6 font-medium">NF-e 12045</td>
+                                <td class="py-3 px-6">Ana Pereira</td>
+                                <td class="py-3 px-6">Divergência de CFOP interestadual.</td>
+                                <td class="py-3 px-6 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Corrigido</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 5. TUTORIAIS -->
+            <section id="tutoriais" class="tab-content">
+                <h3 class="text-lg font-semibold text-brand-900 mb-6">Central de Tutoriais e Treinamentos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
+                        <div class="h-40 bg-gray-200 relative flex justify-center items-center group cursor-pointer">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover opacity-80" alt="Video cover">
+                            <div class="absolute w-12 h-12 bg-black/60 rounded-full flex justify-center items-center text-white"><i class="fa-solid fa-play ml-1"></i></div>
+                        </div>
+                        <div class="p-5">
+                            <span class="text-xs font-bold text-brand-accent uppercase tracking-wider">Faturamento</span>
+                            <h4 class="text-md font-semibold text-gray-800 mt-1 mb-2">Como corrigir Rejeição de CT-e (RNTRC)</h4>
+                            <p class="text-sm text-gray-500">Ajustes necessários no cadastro antes de reenviar para a Sefaz.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
+                        <div class="h-40 bg-gray-200 relative flex justify-center items-center group cursor-pointer">
+                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover opacity-80" alt="Video cover">
+                            <div class="absolute w-12 h-12 bg-black/60 rounded-full flex justify-center items-center text-white"><i class="fa-solid fa-play ml-1"></i></div>
+                        </div>
+                        <div class="p-5">
+                            <span class="text-xs font-bold text-brand-accent uppercase tracking-wider">Financeiro</span>
+                            <h4 class="text-md font-semibold text-gray-800 mt-1 mb-2">Lançamento de Fixo vs Agregado</h4>
+                            <p class="text-sm text-gray-500">Como provisionar pagamentos no plano de contas do sistema.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition flex flex-col">
+                        <div class="h-40 bg-brand-50 flex justify-center items-center text-brand-700 text-5xl">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div class="p-5 flex-1">
+                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Manual PDF</span>
+                            <h4 class="text-md font-semibold text-gray-800 mt-1 mb-2">Guia Rápido de Emissão Suape</h4>
+                            <p class="text-sm text-gray-500 mb-4">Documentação padrão para a operação portuária.</p>
+                            <button class="text-sm text-brand-accent font-medium hover:underline"><i class="fa-solid fa-download mr-1"></i> Baixar Arquivo</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </main>
 
-    <!-- Script de Configuração do Supabase e Abas -->
     <script>
-        // AS SUAS CHAVES DO SUPABASE JÁ ESTÃO AQUI
+        // LIGAÇÃO SUPABASE COM AS SUAS CHAVE OFICIAIS
         const supabaseUrl = 'https://mvyujpxkzsonlfyvvims.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12eXVqcHhrenNvbmxmeXZ2aW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NTc2MjYsImV4cCI6MjEwODMzMzYyNn0.vpMp5BYmVwRXgmz3vShm0gO2estfuRkZ0ezaS9D1lfE';
-        
-        // Conexão iniciada
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         const titulos = {
             'dashboard': 'Dashboard Geral',
-            'frete': 'Consulta de Frete',
-            'pagamentos': 'Pagamentos (Fixo/Agregado)'
+            'frete': 'Consulta de Frete (Tabela Oficial)',
+            'pagamentos': 'Gestão de Pagamentos',
+            'erros': 'Monitoramento de Erros de Emissão',
+            'tutoriais': 'Central de Tutoriais e Manuais'
         };
 
         function showTab(tabId) {
@@ -124,8 +367,39 @@
             });
             
             const activeNav = document.getElementById('nav-' + tabId);
-            activeNav.classList.remove('border-transparent', 'text-gray-300');
-            activeNav.classList.add('bg-brand-800', 'border-brand-accent', 'text-white');
+            if (activeNav) {
+                activeNav.classList.remove('border-transparent', 'text-gray-300');
+                activeNav.classList.add('bg-brand-800', 'border-brand-accent', 'text-white');
+            }
+        }
+
+        function buscarFreteExemplo() {
+            const destino = document.getElementById('input-destino').value || 'Recife / PE';
+            const res = document.getElementById('resultado-frete');
+            res.innerHTML = `
+                <div class="overflow-x-auto text-left">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 text-sm border-b">
+                                <th class="py-3 px-4 font-medium">Origem</th>
+                                <th class="py-3 px-4 font-medium">Destino</th>
+                                <th class="py-3 px-4 font-medium">Tipo Carga</th>
+                                <th class="py-3 px-4 font-medium text-right">Valor Frete Sugerido</th>
+                                <th class="py-3 px-4 font-medium text-center">Status Tabela</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <tr class="border-b">
+                                <td class="py-3 px-4">Porto de Suape (PE)</td>
+                                <td class="py-3 px-4 font-semibold text-brand-900">${destino}</td>
+                                <td class="py-3 px-4">Carreta 3 Eixos</td>
+                                <td class="py-3 px-4 text-right font-bold text-green-600">R$ 2.850,00</td>
+                                <td class="py-3 px-4 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Suape 6.9 Valida</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
         }
     </script>
 </body>
