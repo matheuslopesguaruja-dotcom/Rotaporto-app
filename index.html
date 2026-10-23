@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RotaPorto | Gestão Administrativa e Logística</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Biblioteca do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            900: '#0B132B', 
+                            800: '#1C2541', 
+                            700: '#3A506B', 
+                            accent: '#4793AF', 
+                            light: '#F8F9FA' 
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-brand-light text-gray-800 flex h-screen overflow-hidden">
+
+    <!-- Sidebar (Menu Lateral) -->
+    <aside class="w-64 bg-brand-900 text-white flex flex-col shadow-2xl z-20">
+        <div class="h-16 flex items-center justify-center border-b border-brand-800">
+            <h1 class="text-2xl font-bold tracking-wider text-white">
+                <i class="fa-solid fa-ship text-brand-accent mr-2"></i>Rota<span class="text-brand-accent">Porto</span>
+            </h1>
+        </div>
+        
+        <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+            <a href="#" onclick="showTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors bg-brand-800 border-l-4 border-brand-accent text-white">
+                <i class="fa-solid fa-chart-pie w-6"></i>
+                <span class="font-medium">Dashboard Geral</span>
+            </a>
+            <a href="#" onclick="showTab('frete')" id="nav-frete" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
+                <i class="fa-solid fa-route w-6"></i>
+                <span class="font-medium">Consulta de Frete</span>
+            </a>
+            <a href="#" onclick="showTab('pagamentos')" id="nav-pagamentos" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
+                <i class="fa-solid fa-money-check-dollar w-6"></i>
+                <span class="font-medium">Pagamentos (Fixo/Agreg)</span>
+            </a>
+        </nav>
+        
+        <div class="p-4 border-t border-brand-800 text-sm text-gray-400">
+            <p>&copy; 2026 RotaPorto</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen relative overflow-y-auto">
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 sticky top-0">
+            <h2 class="text-xl font-semibold text-brand-900" id="page-title">Dashboard Geral</h2>
+        </header>
+
+        <div class="p-8">
+            <!-- 1. DASHBOARD GERAL -->
+            <section id="dashboard" class="tab-content active">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+                    <h3 class="text-lg font-semibold text-brand-900 mb-2">Bem-vindo ao Sistema RotaPorto</h3>
+                    <p class="text-gray-600">O seu banco de dados Supabase foi configurado com sucesso e está pronto para receber dados.</p>
+                </div>
+            </section>
+
+            <!-- 2. CONSULTA DE FRETE -->
+            <section id="frete" class="tab-content">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <h3 class="text-lg font-semibold text-brand-900 mb-4">Módulo de Consulta de Rotas</h3>
+                    <p class="text-gray-500 mb-4">Base ativa: BUSCA FRETE OFICIAL 6.9 - INCLUSAO SUAPE.xlsx</p>
+                    <button class="bg-brand-accent text-white font-medium py-2 px-4 rounded-lg">Buscar Rota</button>
+                </div>
+            </section>
+
+            <!-- 3. PAGAMENTOS -->
+            <section id="pagamentos" class="tab-content">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-lg font-semibold text-brand-900 mb-4">Gestão de Pagamentos</h3>
+                    <button class="bg-brand-900 text-white px-4 py-2 rounded-lg text-sm">Novo Lançamento</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Script de Configuração do Supabase e Abas -->
+    <script>
+        // AS SUAS CHAVES DO SUPABASE JÁ ESTÃO AQUI
+        const supabaseUrl = 'https://mvyujpxkzsonlfyvvims.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12eXVqcHhrenNvbmxmeXZ2aW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NTc2MjYsImV4cCI6MjEwODMzMzYyNn0.vpMp5BYmVwRXgmz3vShm0gO2estfuRkZ0ezaS9D1lfE';
+        
+        // Conexão iniciada
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        const titulos = {
+            'dashboard': 'Dashboard Geral',
+            'frete': 'Consulta de Frete',
+            'pagamentos': 'Pagamentos (Fixo/Agregado)'
+        };
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('page-title').innerText = titulos[tabId];
+            
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-brand-800', 'border-brand-accent', 'text-white');
+                el.classList.add('border-transparent', 'text-gray-300');
+            });
+            
+            const activeNav = document.getElementById('nav-' + tabId);
+            activeNav.classList.remove('border-transparent', 'text-gray-300');
+            activeNav.classList.add('bg-brand-800', 'border-brand-accent', 'text-white');
+        }
+    </script>
+</body>
+</html>
