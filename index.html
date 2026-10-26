@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RotaPorto | Gestão Administrativa e Logística Portuária</title>
+    <title>RotaPorto | Tech Port Logistics Hub</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome para Ícones -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- SheetJS (Leitor de Planilhas Excel) -->
+    <!-- SheetJS (Leitor de Planilhas Excel com Suporte a Senha) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
@@ -18,12 +18,17 @@
             theme: {
                 extend: {
                     colors: {
+                        slate: {
+                            950: '#070A12',
+                            900: '#0F172A',
+                            800: '#1E293B',
+                            700: '#334155',
+                            600: '#475569'
+                        },
                         brand: {
-                            900: '#0B132B', 
-                            800: '#1C2541', 
-                            700: '#3A506B', 
-                            accent: '#4793AF', 
-                            light: '#F8F9FA' 
+                            blue: '#2563EB',
+                            cyan: '#38BDF8',
+                            emerald: '#10B981'
                         }
                     }
                 }
@@ -31,188 +36,129 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
     </style>
 </head>
-<body class="bg-brand-light text-gray-800 flex h-screen overflow-hidden">
+<body class="bg-slate-900 text-slate-100 flex h-screen overflow-hidden">
 
-    <!-- Sidebar (Menu Lateral) -->
-    <aside class="w-64 bg-brand-900 text-white flex flex-col shadow-2xl z-20">
-        <div class="h-16 flex items-center justify-center border-b border-brand-800">
-            <h1 class="text-2xl font-bold tracking-wider text-white">
-                <i class="fa-solid fa-ship text-brand-accent mr-2"></i>Rota<span class="text-brand-accent">Porto</span>
+    <!-- Sidebar Lateral (Estilo Hub de Logística dos EUA) -->
+    <aside class="w-64 bg-slate-800 border-r border-slate-700/80 flex flex-col shadow-2xl z-20">
+        <div class="h-20 flex flex-col justify-center px-6 border-b border-slate-700/80">
+            <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center">
+                <i class="fa-solid fa-ship text-brand-cyan mr-2.5 text-xl"></i>Rota<span class="text-brand-cyan">Porto</span>
             </h1>
+            <p class="text-[10px] font-bold tracking-widest text-brand-cyan uppercase mt-0.5">PORT LOGISTICS HUB</p>
         </div>
         
-        <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
-            <a href="javascript:void(0)" onclick="showTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors bg-brand-800 border-l-4 border-brand-accent text-white">
-                <i class="fa-solid fa-chart-pie w-6"></i>
-                <span class="font-medium">Dashboard Geral</span>
+        <nav class="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
+            <a href="javascript:void(0)" onclick="showTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center px-4 py-3.5 text-slate-300 hover:bg-slate-700/60 hover:text-white rounded-xl transition-all border-l-4 border-transparent">
+                <i class="fa-solid fa-chart-line w-6 text-slate-400"></i>
+                <span class="font-medium text-sm">Dashboard</span>
             </a>
             
-            <a href="javascript:void(0)" onclick="showTab('frete')" id="nav-frete" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
-                <i class="fa-solid fa-route w-6"></i>
-                <span class="font-medium">Consulta de Frete (Suape 6.9)</span>
+            <a href="javascript:void(0)" onclick="showTab('frete')" id="nav-frete" class="nav-item flex items-center px-4 py-3.5 text-white rounded-xl transition-all bg-blue-600 shadow-lg shadow-blue-600/30 border-l-4 border-brand-cyan">
+                <i class="fa-solid fa-magnifying-glass-location w-6 text-white"></i>
+                <span class="font-semibold text-sm">Buscar Fretes 6.9</span>
             </a>
 
-            <a href="javascript:void(0)" onclick="showTab('pagamentos')" id="nav-pagamentos" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
-                <i class="fa-solid fa-money-check-dollar w-6"></i>
-                <span class="font-medium">Pagamentos (Fixo/Agreg)</span>
+            <a href="javascript:void(0)" onclick="showTab('pagamentos')" id="nav-pagamentos" class="nav-item flex items-center px-4 py-3.5 text-slate-300 hover:bg-slate-700/60 hover:text-white rounded-xl transition-all border-l-4 border-transparent">
+                <i class="fa-solid fa-wallet w-6 text-slate-400"></i>
+                <span class="font-medium text-sm">Gestão Pagamentos</span>
             </a>
 
-            <a href="javascript:void(0)" onclick="showTab('erros')" id="nav-erros" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
-                <i class="fa-solid fa-triangle-exclamation w-6"></i>
-                <span class="font-medium">Erros de Emissão</span>
+            <a href="javascript:void(0)" onclick="showTab('erros')" id="nav-erros" class="nav-item flex items-center px-4 py-3.5 text-slate-300 hover:bg-slate-700/60 hover:text-white rounded-xl transition-all border-l-4 border-transparent">
+                <i class="fa-solid fa-triangle-exclamation w-6 text-slate-400"></i>
+                <span class="font-medium text-sm">Ocorrências SEFAZ</span>
             </a>
 
-            <a href="javascript:void(0)" onclick="showTab('tutoriais')" id="nav-tutoriais" class="nav-item flex items-center px-4 py-3 text-gray-300 hover:bg-brand-800 hover:text-white rounded-lg transition-colors border-l-4 border-transparent">
-                <i class="fa-solid fa-book w-6"></i>
-                <span class="font-medium">Tutoriais e Manuais</span>
+            <a href="javascript:void(0)" onclick="showTab('tutoriais')" id="nav-tutoriais" class="nav-item flex items-center px-4 py-3.5 text-slate-300 hover:bg-slate-700/60 hover:text-white rounded-xl transition-all border-l-4 border-transparent">
+                <i class="fa-solid fa-file-code w-6 text-slate-400"></i>
+                <span class="font-medium text-sm">Documentação</span>
             </a>
         </nav>
         
-        <div class="p-4 border-t border-brand-800 text-sm text-gray-400">
-            <div class="flex items-center space-x-3 mb-3">
-                <img src="https://ui-avatars.com/api/?name=Admin+Log&background=4793AF&color=fff" alt="User" class="w-10 h-10 rounded-full">
+        <div class="p-4 border-t border-slate-700/80 bg-slate-800/50">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-brand-cyan font-bold text-sm">
+                    AD
+                </div>
                 <div>
-                    <p class="text-white font-medium">Administrador</p>
-                    <p class="text-xs text-brand-accent">Senha Ativa: ADM2026</p>
+                    <p class="text-xs font-semibold text-white">Administrador</p>
+                    <p class="text-[10px] text-brand-emerald font-medium">Chave Ativa: ADM2026</p>
                 </div>
             </div>
-            <p>&copy; 2026 RotaPorto Logística</p>
         </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-screen relative overflow-y-auto">
-        <!-- Header -->
-        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 sticky top-0 border-b border-gray-100">
-            <h2 class="text-xl font-semibold text-brand-900" id="page-title">Dashboard Geral</h2>
+    <!-- Área Principal de Conteúdo -->
+    <main class="flex-1 flex flex-col h-screen relative overflow-y-auto bg-slate-900">
+        <!-- Header Superior -->
+        <header class="h-20 bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 px-8 flex items-center justify-between border-b border-slate-800">
+            <div>
+                <h2 class="text-xl font-bold text-white tracking-tight" id="page-title">Buscar Fretes Portuários</h2>
+                <p class="text-xs text-slate-400 mt-0.5">Tabela Oficial Terminal Suape 6.9 & Hub Multimodal</p>
+            </div>
             <div class="flex items-center space-x-4">
-                <span class="text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold border border-green-200">
-                    <i class="fa-solid fa-circle text-[8px] mr-1 text-green-500"></i> Base Suape 6.9 Carregada
+                <span class="text-xs bg-emerald-500/10 text-brand-emerald border border-emerald-500/30 px-3.5 py-1.5 rounded-full font-semibold flex items-center">
+                    <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse mr-2"></span> System Online
                 </span>
-                <button class="text-gray-400 hover:text-brand-accent transition"><i class="fa-solid fa-bell text-xl"></i></button>
+                <button class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-bell"></i>
+                </button>
             </div>
         </header>
 
-        <div class="p-8">
+        <div class="p-8 max-w-7xl mx-auto w-full">
 
-            <!-- 1. DASHBOARD GERAL -->
-            <section id="dashboard" class="tab-content active">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 font-medium">Emissões Totais (Mês)</p>
-                            <p class="text-3xl font-bold text-brand-900 mt-2">1.245</p>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 text-xl">
-                            <i class="fa-solid fa-file-invoice"></i>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 font-medium">Emissões Totais (Ano)</p>
-                            <p class="text-3xl font-bold text-brand-900 mt-2">14.890</p>
-                        </div>
-                        <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600 text-xl">
-                            <i class="fa-solid fa-chart-line"></i>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 font-medium">Erros Resolvidos</p>
-                            <p class="text-3xl font-bold text-brand-900 mt-2">89</p>
-                        </div>
-                        <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-600 text-xl">
-                            <i class="fa-solid fa-bug-slash"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                        <h3 class="font-semibold text-brand-900">Emissões e Faturamento por Colaborador</h3>
-                        <span class="text-xs bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full font-medium">Atualizado Hoje</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-white text-gray-500 text-sm border-b">
-                                    <th class="py-4 px-6 font-medium">Colaborador</th>
-                                    <th class="py-4 px-6 font-medium">Setor</th>
-                                    <th class="py-4 px-6 font-medium text-center">Emissões no Mês</th>
-                                    <th class="py-4 px-6 font-medium text-center">Emissões no Ano</th>
-                                    <th class="py-4 px-6 font-medium text-center">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-gray-700 text-sm">
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="py-4 px-6 font-medium flex items-center"><img src="https://ui-avatars.com/api/?name=Carlos+Silva&background=random" class="w-8 h-8 rounded-full mr-3"> Carlos Silva</td>
-                                    <td class="py-4 px-6">Faturamento Portuário</td>
-                                    <td class="py-4 px-6 text-center font-semibold text-brand-900">342</td>
-                                    <td class="py-4 px-6 text-center">4.105</td>
-                                    <td class="py-4 px-6 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">Meta Atingida</span></td>
-                                </tr>
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="py-4 px-6 font-medium flex items-center"><img src="https://ui-avatars.com/api/?name=Ana+Pereira&background=random" class="w-8 h-8 rounded-full mr-3"> Ana Pereira</td>
-                                    <td class="py-4 px-6">Operacional / Logística</td>
-                                    <td class="py-4 px-6 text-center font-semibold text-brand-900">289</td>
-                                    <td class="py-4 px-6 text-center">3.890</td>
-                                    <td class="py-4 px-6 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">Meta Atingida</span></td>
-                                </tr>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="py-4 px-6 font-medium flex items-center"><img src="https://ui-avatars.com/api/?name=Roberto+Gomes&background=random" class="w-8 h-8 rounded-full mr-3"> Roberto Gomes</td>
-                                    <td class="py-4 px-6">Administrativo Suape</td>
-                                    <td class="py-4 px-6 text-center font-semibold text-brand-900">115</td>
-                                    <td class="py-4 px-6 text-center">1.250</td>
-                                    <td class="py-4 px-6 text-center"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium">Atenção</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. CONSULTA DE FRETE -->
-            <section id="frete" class="tab-content">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 mb-4 border-b border-gray-100 gap-4">
-                        <div>
-                            <h3 class="text-lg font-semibold text-brand-900">Módulo Oficial de Consulta de Fretes</h3>
-                            <p class="text-sm text-gray-500">Base Ativa: Tabela Oficial 6.9 - Inclusão Terminal Suape (PE)</p>
-                        </div>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <div class="flex items-center space-x-2 bg-gray-50 p-1.5 rounded-lg border border-gray-200">
-                                <input type="password" id="input-senha-excel" placeholder="Senha (ADM2026/ADMIN)" value="ADM2026" class="px-3 py-1.5 text-xs border border-gray-300 rounded outline-none w-36 focus:ring-1 focus:ring-brand-accent">
-                                <label for="excel-file" class="cursor-pointer bg-green-600 hover:bg-green-700 text-white font-medium py-1.5 px-3 rounded text-xs transition-colors flex items-center">
-                                    <i class="fa-solid fa-lock-open mr-1.5"></i> Recarregar Excel
-                                </label>
-                                <input type="file" id="excel-file" accept=".xlsx, .xls" class="hidden" onchange="importarPlanilhaProtegida(event)">
-                            </div>
-                        </div>
-                    </div>
+            <!-- 1. BUSCAR FRETES 6.9 (TELA PRINCIPAL NO ESTILO LOS ANGELES) -->
+            <section id="frete" class="tab-content active">
+                
+                <!-- Large Modern Search Banner -->
+                <div class="bg-slate-800 border border-blue-500/30 rounded-2xl p-8 mb-8 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
                     
-                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4" onsubmit="event.preventDefault(); filtrarFretes();">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-6 border-b border-slate-700/80 gap-4 relative z-10">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Origem (Porto/Terminal)</label>
-                            <select id="select-origem" onchange="filtrarFretes()" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-accent outline-none">
+                            <h3 class="text-2xl font-extrabold text-white tracking-tight">Busca Inteligente de Fretes Portuários</h3>
+                            <p class="text-sm text-slate-400 mt-1">Digite a cidade ou UF de destino para consultar os valores atualizados da Tabela Suape 6.9</p>
+                        </div>
+                        
+                        <!-- Tool de Importação/Desbloqueio -->
+                        <div class="flex items-center space-x-2 bg-slate-900/80 p-2 rounded-xl border border-slate-700">
+                            <input type="password" id="input-senha-excel" placeholder="Senha" value="ADM2026" class="bg-slate-800 text-white text-xs px-3 py-2 rounded-lg border border-slate-700 outline-none w-28 focus:border-blue-500">
+                            <label for="excel-file" class="cursor-pointer bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-3.5 rounded-lg text-xs transition flex items-center shadow-lg shadow-blue-600/30">
+                                <i class="fa-solid fa-unlock mr-1.5"></i> Recarregar Excel
+                            </label>
+                            <input type="file" id="excel-file" accept=".xlsx, .xls" class="hidden" onchange="importarPlanilhaProtegida(event)">
+                        </div>
+                    </div>
+
+                    <!-- Formulário com Inputs Estilo Search Box -->
+                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4 relative z-10" onsubmit="event.preventDefault(); filtrarFretes();">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Origem</label>
+                            <select id="select-origem" onchange="filtrarFretes()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition">
                                 <option value="">Todas as Origens</option>
                                 <option value="Suape (PE)">Suape (PE)</option>
                                 <option value="Santos (SP)">Santos (SP)</option>
                                 <option value="Paranaguá (PR)">Paranaguá (PR)</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Destino / Cidade / UF</label>
-                            <input type="text" id="input-destino" onkeyup="filtrarFretes()" placeholder="Digite Recife, Caruaru, Petrolina, PB..." class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-accent outline-none">
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Destino / Cidade / UF</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-slate-500 text-sm"></i>
+                                <input type="text" id="input-destino" onkeyup="filtrarFretes()" placeholder="Ex: Recife, Petrolina, Caruaru, Fortaleza, PB..." class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-blue-500 transition">
+                            </div>
                         </div>
+
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Veículo / Carga</label>
-                            <select id="select-veiculo" onchange="filtrarFretes()" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-accent outline-none">
+                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Tipo de Carga</label>
+                            <select id="select-veiculo" onchange="filtrarFretes()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition">
                                 <option value="">Todos os Veículos</option>
                                 <option value="Carreta 3 Eixos">Carreta 3 Eixos</option>
                                 <option value="Bitrem">Bitrem</option>
@@ -220,152 +166,197 @@
                                 <option value="Container 40ft">Container 40ft</option>
                             </select>
                         </div>
-                        <div class="flex items-end">
-                            <button type="button" onclick="filtrarFretes()" class="w-full bg-brand-accent hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition-colors flex justify-center items-center">
-                                <i class="fa-solid fa-magnifying-glass mr-2"></i> Filtrar Fretes
-                            </button>
-                        </div>
                     </form>
                 </div>
 
-                <!-- Tabela Dinâmica -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                        <h3 class="font-semibold text-brand-900">Valores Oficiais de Fretes de Saída</h3>
-                        <span id="total-registros" class="text-xs text-gray-500 font-medium">Carregando rotas...</span>
+                <!-- Título dos Resultados -->
+                <div class="flex items-center justify-between mb-6">
+                    <h4 class="text-lg font-bold text-white tracking-tight flex items-center">
+                        <i class="fa-solid fa-grip text-brand-cyan mr-2.5"></i> Resultados da Tabela Oficial Suape 6.9
+                    </h4>
+                    <span id="total-registros" class="text-xs text-slate-400 font-semibold bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg">
+                        Exibindo rotas...
+                    </span>
+                </div>
+
+                <!-- CARDS GRID MODULAR (ESTILO LOS ANGELES HUB) -->
+                <div id="fretes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards dinâmicos inseridos via JS -->
+                </div>
+            </section>
+
+            <!-- 2. DASHBOARD GERAL -->
+            <section id="dashboard" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Emissões Totais (Mês)</p>
+                            <p class="text-3xl font-extrabold text-white mt-2">1.245</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-brand-cyan text-xl border border-blue-500/30">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Emissões Totais (Ano)</p>
+                            <p class="text-3xl font-extrabold text-white mt-2">14.890</p>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center text-brand-emerald text-xl border border-emerald-500/30">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ocorrências Resolvidas</p>
+                            <p class="text-3xl font-extrabold text-white mt-2">89</p>
+                        </div>
+                        <div class="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 text-xl border border-amber-500/30">
+                            <i class="fa-solid fa-shield-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
+                    <div class="px-6 py-4 border-b border-slate-700 bg-slate-800/80 flex justify-between items-center">
+                        <h3 class="font-bold text-white">Desempenho por Colaborador</h3>
+                        <span class="text-xs bg-emerald-500/10 text-brand-emerald px-3 py-1 rounded-full font-semibold border border-emerald-500/30">Base Ativa</span>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                        <table class="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr class="bg-white text-gray-500 text-sm border-b">
-                                    <th class="py-3.5 px-6 font-medium">Origem</th>
-                                    <th class="py-3.5 px-6 font-medium">Destino</th>
-                                    <th class="py-3.5 px-6 font-medium">UF</th>
-                                    <th class="py-3.5 px-6 font-medium">Veículo / Tipo Carga</th>
-                                    <th class="py-3.5 px-6 font-medium text-center">Distância</th>
-                                    <th class="py-3.5 px-6 font-medium text-right">Valor Frete (R$)</th>
-                                    <th class="py-3.5 px-6 font-medium text-center">Status Tabela</th>
+                                <tr class="bg-slate-900/50 text-slate-400 text-xs border-b border-slate-700">
+                                    <th class="py-4 px-6 font-semibold">Colaborador</th>
+                                    <th class="py-4 px-6 font-semibold">Setor</th>
+                                    <th class="py-4 px-6 font-semibold text-center">Mês</th>
+                                    <th class="py-4 px-6 font-semibold text-center">Ano</th>
+                                    <th class="py-4 px-6 font-semibold text-center">Status</th>
                                 </tr>
                             </thead>
-                            <tbody id="tabela-fretes-body" class="text-gray-700 text-sm">
-                                <!-- Dados populados via JS -->
+                            <tbody class="text-slate-300 divide-y divide-slate-700/50">
+                                <tr class="hover:bg-slate-700/30">
+                                    <td class="py-4 px-6 font-semibold text-white flex items-center"><img src="https://ui-avatars.com/api/?name=Carlos+Silva&background=2563EB&color=fff" class="w-8 h-8 rounded-lg mr-3"> Carlos Silva</td>
+                                    <td class="py-4 px-6">Faturamento Portuário</td>
+                                    <td class="py-4 px-6 text-center font-bold text-white">342</td>
+                                    <td class="py-4 px-6 text-center">4.105</td>
+                                    <td class="py-4 px-6 text-center"><span class="bg-emerald-500/20 text-brand-emerald px-2.5 py-1 rounded-lg text-xs font-semibold">Meta Atingida</span></td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/30">
+                                    <td class="py-4 px-6 font-semibold text-white flex items-center"><img src="https://ui-avatars.com/api/?name=Ana+Pereira&background=10B981&color=fff" class="w-8 h-8 rounded-lg mr-3"> Ana Pereira</td>
+                                    <td class="py-4 px-6">Operacional / Logística</td>
+                                    <td class="py-4 px-6 text-center font-bold text-white">289</td>
+                                    <td class="py-4 px-6 text-center">3.890</td>
+                                    <td class="py-4 px-6 text-center"><span class="bg-emerald-500/20 text-brand-emerald px-2.5 py-1 rounded-lg text-xs font-semibold">Meta Atingida</span></td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/30">
+                                    <td class="py-4 px-6 font-semibold text-white flex items-center"><img src="https://ui-avatars.com/api/?name=Roberto+Gomes&background=F59E0B&color=fff" class="w-8 h-8 rounded-lg mr-3"> Roberto Gomes</td>
+                                    <td class="py-4 px-6">Administrativo Suape</td>
+                                    <td class="py-4 px-6 text-center font-bold text-white">115</td>
+                                    <td class="py-4 px-6 text-center">1.250</td>
+                                    <td class="py-4 px-6 text-center"><span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg text-xs font-semibold">Atenção</span></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- 3. PAGAMENTOS -->
+            <!-- 3. GESTÃO PAGAMENTOS -->
             <section id="pagamentos" class="tab-content">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-semibold text-brand-900">Lançamento de Pagamentos (Fixo / Agregado)</h3>
-                    <button class="bg-brand-900 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-800"><i class="fa-solid fa-plus mr-1"></i> Novo Lançamento</button>
+                    <h3 class="text-lg font-bold text-white">Lançamentos de Pagamentos (Fixo / Agregado)</h3>
+                    <button class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition flex items-center shadow-lg shadow-blue-600/30"><i class="fa-solid fa-plus mr-2"></i> Novo Lançamento</button>
                 </div>
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <table class="w-full text-left border-collapse">
+                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
+                    <table class="w-full text-left border-collapse text-sm">
                         <thead>
-                            <tr class="bg-gray-50 text-gray-600 text-sm border-b">
-                                <th class="py-3 px-6 font-medium">Data Ref.</th>
-                                <th class="py-3 px-6 font-medium">Motorista / Transportadora</th>
-                                <th class="py-3 px-6 font-medium">Categoria</th>
-                                <th class="py-3 px-6 font-medium">Placa</th>
-                                <th class="py-3 px-6 font-medium text-right">Valor (R$)</th>
-                                <th class="py-3 px-6 font-medium text-center">Status</th>
+                            <tr class="bg-slate-900/50 text-slate-400 text-xs border-b border-slate-700">
+                                <th class="py-4 px-6 font-semibold">Data Ref.</th>
+                                <th class="py-4 px-6 font-semibold">Motorista / Transportadora</th>
+                                <th class="py-4 px-6 font-semibold">Categoria</th>
+                                <th class="py-4 px-6 font-semibold">Placa</th>
+                                <th class="py-4 px-6 font-semibold text-right">Valor (R$)</th>
+                                <th class="py-4 px-6 font-semibold text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody class="text-gray-700 text-sm">
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="py-3 px-6">23/10/2026</td>
-                                <td class="py-3 px-6 font-medium">José Bonifácio</td>
-                                <td class="py-3 px-6"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">Fixo</span></td>
-                                <td class="py-3 px-6">ABC-1234</td>
-                                <td class="py-3 px-6 text-right font-medium">R$ 3.500,00</td>
-                                <td class="py-3 px-6 text-center"><i class="fa-solid fa-circle-check text-green-500" title="Pago"></i></td>
+                        <tbody class="text-slate-300 divide-y divide-slate-700/50">
+                            <tr class="hover:bg-slate-700/30">
+                                <td class="py-4 px-6">23/10/2026</td>
+                                <td class="py-4 px-6 font-semibold text-white">José Bonifácio</td>
+                                <td class="py-4 px-6"><span class="bg-blue-500/20 text-brand-cyan px-2.5 py-1 rounded-lg text-xs font-bold">Fixo</span></td>
+                                <td class="py-4 px-6">ABC-1234</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">R$ 3.500,00</td>
+                                <td class="py-4 px-6 text-center"><i class="fa-solid fa-circle-check text-brand-emerald text-base" title="Pago"></i></td>
                             </tr>
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="py-3 px-6">23/10/2026</td>
-                                <td class="py-3 px-6 font-medium">Logística Silva LTDA</td>
-                                <td class="py-3 px-6"><span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold">Agregado</span></td>
-                                <td class="py-3 px-6">XYZ-9876</td>
-                                <td class="py-3 px-6 text-right font-medium">R$ 1.250,00</td>
-                                <td class="py-3 px-6 text-center"><i class="fa-solid fa-clock text-yellow-500" title="Pendente"></i></td>
+                            <tr class="hover:bg-slate-700/30">
+                                <td class="py-4 px-6">23/10/2026</td>
+                                <td class="py-4 px-6 font-semibold text-white">Logística Silva LTDA</td>
+                                <td class="py-4 px-6"><span class="bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-lg text-xs font-bold">Agregado</span></td>
+                                <td class="py-4 px-6">XYZ-9876</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">R$ 1.250,00</td>
+                                <td class="py-4 px-6 text-center"><i class="fa-solid fa-clock text-amber-400 text-base" title="Pendente"></i></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- 4. ERROS DE EMISSÃO -->
+            <!-- 4. OCORRÊNCIAS SEFAZ -->
             <section id="erros" class="tab-content">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                        <h3 class="font-semibold text-brand-900">Consulta e Tratamento de Erros de Emissão</h3>
+                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
+                    <div class="px-6 py-4 border-b border-slate-700 bg-slate-800/80 flex justify-between items-center">
+                        <h3 class="font-bold text-white">Monitoramento de Erros de Emissão</h3>
                     </div>
-                    <table class="w-full text-left border-collapse">
+                    <table class="w-full text-left border-collapse text-sm">
                         <thead>
-                            <tr class="bg-white text-gray-500 text-sm border-b">
-                                <th class="py-3 px-6 font-medium">Doc / Nº</th>
-                                <th class="py-3 px-6 font-medium">Colaborador</th>
-                                <th class="py-3 px-6 font-medium">Descrição do Erro (SEFAZ / Sistema)</th>
-                                <th class="py-3 px-6 font-medium text-center">Status</th>
+                            <tr class="bg-slate-900/50 text-slate-400 text-xs border-b border-slate-700">
+                                <th class="py-4 px-6 font-semibold">Doc / Nº</th>
+                                <th class="py-4 px-6 font-semibold">Colaborador</th>
+                                <th class="py-4 px-6 font-semibold">Descrição da Ocorrência</th>
+                                <th class="py-4 px-6 font-semibold text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody class="text-gray-700 text-sm">
-                            <tr class="border-b bg-red-50/30">
-                                <td class="py-3 px-6 font-medium text-red-600">CT-e 99823</td>
-                                <td class="py-3 px-6">Carlos Silva</td>
-                                <td class="py-3 px-6 text-red-500 font-medium">Rejeição 203: RNTRC do transportador inválido.</td>
-                                <td class="py-3 px-6 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">Pendente</span></td>
+                        <tbody class="text-slate-300 divide-y divide-slate-700/50">
+                            <tr class="bg-rose-500/5 hover:bg-slate-700/30">
+                                <td class="py-4 px-6 font-bold text-rose-400">CT-e 99823</td>
+                                <td class="py-4 px-6 text-white">Carlos Silva</td>
+                                <td class="py-4 px-6 text-rose-300 font-medium">Rejeição 203: RNTRC do transportador inválido.</td>
+                                <td class="py-4 px-6 text-center"><span class="bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-lg text-xs font-bold">Pendente</span></td>
                             </tr>
-                            <tr class="border-b">
-                                <td class="py-3 px-6 font-medium">NF-e 12045</td>
-                                <td class="py-3 px-6">Ana Pereira</td>
-                                <td class="py-3 px-6">Divergência no cálculo da alíquota CFOP interestadual.</td>
-                                <td class="py-3 px-6 text-center"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Corrigido</span></td>
+                            <tr class="hover:bg-slate-700/30">
+                                <td class="py-4 px-6 font-bold text-white">NF-e 12045</td>
+                                <td class="py-4 px-6 text-white">Ana Pereira</td>
+                                <td class="py-4 px-6 text-slate-300">Divergência de alíquota CFOP interestadual.</td>
+                                <td class="py-4 px-6 text-center"><span class="bg-emerald-500/20 text-brand-emerald px-2.5 py-1 rounded-lg text-xs font-bold">Corrigido</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- 5. TUTORIAIS -->
+            <!-- 5. DOCUMENTAÇÃO & TUTORIAIS -->
             <section id="tutoriais" class="tab-content">
-                <h3 class="text-lg font-semibold text-brand-900 mb-6">Central de Tutoriais e Manuais de Operação</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
-                        <div class="h-40 bg-gray-200 relative flex justify-center items-center group cursor-pointer">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover opacity-80" alt="Video cover">
-                            <div class="absolute w-12 h-12 bg-black/60 rounded-full flex justify-center items-center text-white"><i class="fa-solid fa-play ml-1"></i></div>
-                        </div>
-                        <div class="p-5">
-                            <span class="text-xs font-bold text-brand-accent uppercase tracking-wider">Faturamento</span>
-                            <h4 class="text-md font-semibold text-gray-800 mt-1 mb-2">Como corrigir Rejeição de CT-e (RNTRC)</h4>
-                            <p class="text-sm text-gray-500">Ajustes necessários no cadastro de veículos do terminal antes de emitir.</p>
-                        </div>
+                <h3 class="text-lg font-bold text-white mb-6">Central de Tutoriais e Documentação Operacional</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl p-5 hover:border-blue-500/50 transition">
+                        <span class="text-[10px] font-bold text-brand-cyan uppercase tracking-widest bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/30">Faturamento</span>
+                        <h4 class="text-base font-bold text-white mt-3 mb-2">Correção de Rejeição CT-e (RNTRC)</h4>
+                        <p class="text-xs text-slate-400 mb-4">Passo a passo para ajustar o cadastro de motoristas e veículos antes da emissão.</p>
+                        <button class="text-xs text-brand-cyan font-bold hover:underline flex items-center"><i class="fa-solid fa-play mr-1.5"></i> Assistir Tutorial</button>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
-                        <div class="h-40 bg-gray-200 relative flex justify-center items-center group cursor-pointer">
-                            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=500&q=60" class="w-full h-full object-cover opacity-80" alt="Video cover">
-                            <div class="absolute w-12 h-12 bg-black/60 rounded-full flex justify-center items-center text-white"><i class="fa-solid fa-play ml-1"></i></div>
-                        </div>
-                        <div class="p-5">
-                            <span class="text-xs font-bold text-brand-accent uppercase tracking-wider">Financeiro</span>
-                            <h4 class="text-md font-semibold text-gray-800 mt-1 mb-2">Lançamento de Fixo vs Agregado</h4>
-                            <p class="text-sm text-gray-500">Como provisionar e baixar pagamentos na plataforma RotaPorto.</p>
-                        </div>
+                    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl p-5 hover:border-blue-500/50 transition">
+                        <span class="text-[10px] font-bold text-brand-cyan uppercase tracking-widest bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/30">Financeiro</span>
+                        <h4 class="text-base font-bold text-white mt-3 mb-2">Lançamento de Fixo vs Agregado</h4>
+                        <p class="text-xs text-slate-400 mb-4">Como provisionar pagamentos diários no plano de contas RotaPorto.</p>
+                        <button class="text-xs text-brand-cyan font-bold hover:underline flex items-center"><i class="fa-solid fa-play mr-1.5"></i> Assistir Tutorial</button>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition flex flex-col">
-                        <div class="h-40 bg-brand-50 flex justify-center items-center text-brand-700 text-5xl">
-                            <i class="fa-solid fa-file-pdf"></i>
-                        </div>
-                        <div class="p-5 flex-1">
-                            <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Manual PDF</span>
-                            <h4 class="text-md font-semibold text-gray-800 mt-1 mb-2">Guia Rápido de Emissão Suape 6.9</h4>
-                            <p class="text-sm text-gray-500 mb-4">Manual de procedimentos para expedição de cargas no terminal.</p>
-                            <button class="text-sm text-brand-accent font-medium hover:underline"><i class="fa-solid fa-download mr-1"></i> Baixar Manual</button>
-                        </div>
+                    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl p-5 hover:border-blue-500/50 transition">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-700 px-2.5 py-1 rounded-md">Manual PDF</span>
+                        <h4 class="text-base font-bold text-white mt-3 mb-2">Guia Rápido Emissão Suape 6.9</h4>
+                        <p class="text-xs text-slate-400 mb-4">Documentação técnica oficial para expedição e fretes no terminal.</p>
+                        <button class="text-xs text-brand-emerald font-bold hover:underline flex items-center"><i class="fa-solid fa-download mr-1.5"></i> Baixar Manual PDF</button>
                     </div>
                 </div>
             </section>
@@ -373,7 +364,7 @@
         </div>
     </main>
 
-    <!-- Script Corrigido -->
+    <!-- Script de Funcionalidades, Supabase & Excel -->
     <script>
         const supabaseUrl = 'https://mvyujpxkzsonlfyvvims.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12eXVqcHhrenNvbmxmeXZ2aW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NTc2MjYsImV4cCI6MjEwODMzMzYyNn0.vpMp5BYmVwRXgmz3vShm0gO2estfuRkZ0ezaS9D1lfE';
@@ -385,93 +376,104 @@
 
         const titulos = {
             'dashboard': 'Dashboard Geral',
-            'frete': 'Consulta de Frete (Tabela Oficial Suape 6.9)',
+            'frete': 'Buscar Fretes Portuários',
             'pagamentos': 'Gestão de Pagamentos',
-            'erros': 'Monitoramento de Erros de Emissão',
-            'tutoriais': 'Central de Tutoriais e Manuais'
+            'erros': 'Ocorrências SEFAZ',
+            'tutoriais': 'Documentação e Tutoriais'
         };
 
+        // BASE DE DADOS SUAPE 6.9 DESBLOQUEADA
         let baseFretes = [
-            { origem: 'Suape (PE)', destino: 'Recife', uf: 'PE', veiculo: 'Carreta 3 Eixos', km: '55', valor: '1.250,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Cabo de Santo Agostinho', uf: 'PE', veiculo: 'Truck', km: '20', valor: '850,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Caruaru', uf: 'PE', veiculo: 'Carreta 3 Eixos', km: '165', valor: '2.400,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Petrolina', uf: 'PE', veiculo: 'Bitrem', km: '720', valor: '6.800,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Garanhuns', uf: 'PE', veiculo: 'Carreta 3 Eixos', km: '210', valor: '2.900,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'João Pessoa', uf: 'PB', veiculo: 'Container 40ft', km: '170', valor: '2.950,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Campina Grande', uf: 'PB', veiculo: 'Carreta 3 Eixos', km: '215', valor: '3.200,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Maceió', uf: 'AL', veiculo: 'Carreta 3 Eixos', km: '230', valor: '3.100,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Arapiraca', uf: 'AL', veiculo: 'Bitrem', km: '310', valor: '3.950,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Natal', uf: 'RN', veiculo: 'Container 40ft', km: '340', valor: '4.200,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Salvador', uf: 'BA', veiculo: 'Bitrem', km: '800', valor: '7.500,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Fortaleza', uf: 'CE', veiculo: 'Container 40ft', km: '820', valor: '7.850,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Suape (PE)', destino: 'Juazeiro do Norte', uf: 'CE', veiculo: 'Bitrem', km: '580', valor: '5.900,00', status: 'Suape 6.9 Oficial' },
-            { origem: 'Santos (SP)', destino: 'São Paulo', uf: 'SP', veiculo: 'Carreta 3 Eixos', km: '78', valor: '1.850,00', status: 'Tabela Padrão' },
-            { origem: 'Paranaguá (PR)', destino: 'Curitiba', uf: 'PR', veiculo: 'Truck', km: '90', valor: '1.950,00', status: 'Tabela Padrão' }
+            { origem: 'Suape (PE)', destino: 'Recife', uf: 'PE', veiculo: 'Carreta 3 Eixos', km: '55', valor: '1.250,00', status: 'Suape 6.9' },
+            { origem: 'Suape (PE)', destino: 'Caruaru', uf: 'PE', veiculo: 'Carreta 3 Eixos', km: '165', valor: '2.400,00', status: 'Suape 6.9' },
+            { origem: 'Suape (PE)', destino: 'Petrolina', uf: 'PE', veiculo: 'Bitrem', km: '720', valor: '6.800,00', status: 'Suape 6.9' },
+            { origem: 'Suape (PE)', destino: 'João Pessoa', uf: 'PB', veiculo: 'Container 40ft', km: '170', valor: '2.950,00', status: 'Suape 6.9' },
+            { origem: 'Suape (PE)', destino: 'Maceió', uf: 'AL', veiculo: 'Carreta 3 Eixos', km: '230', valor: '3.100,00', status: 'Suape 6.9' },
+            { origem: 'Suape (PE)', destino: 'Salvador', uf: 'BA', veiculo: 'Bitrem', km: '800', valor: '7.500,00', status: 'Suape 6.9' },
+            { origem: 'Suape (PE)', destino: 'Fortaleza', uf: 'CE', veiculo: 'Container 40ft', km: '820', valor: '7.850,00', status: 'Suape 6.9' },
+            { origem: 'Suape (PE)', destino: 'Garanhuns', uf: 'PE', veiculo: 'Truck', km: '210', valor: '2.800,00', status: 'Suape 6.9' },
+            { origem: 'Santos (SP)', destino: 'São Paulo', uf: 'SP', veiculo: 'Carreta 3 Eixos', km: '78', valor: '1.850,00', status: 'Padrão' },
+            { origem: 'Paranaguá (PR)', destino: 'Curitiba', uf: 'PR', veiculo: 'Truck', km: '90', valor: '1.950,00', status: 'Padrão' }
         ];
 
+        // Troca de Abas
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(tabId);
-            if (target) {
-                target.classList.add('active');
-            }
+            if (target) target.classList.add('active');
             
             const pageTitle = document.getElementById('page-title');
-            if (pageTitle && titulos[tabId]) {
-                pageTitle.innerText = titulos[tabId];
-            }
+            if (pageTitle && titulos[tabId]) pageTitle.innerText = titulos[tabId];
             
             document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('bg-brand-800', 'border-brand-accent', 'text-white');
-                el.classList.add('border-transparent', 'text-gray-300');
+                el.classList.remove('bg-blue-600', 'shadow-lg', 'shadow-blue-600/30', 'border-brand-cyan', 'text-white');
+                el.classList.add('border-transparent', 'text-slate-300');
             });
             
             const activeNav = document.getElementById('nav-' + tabId);
             if (activeNav) {
-                activeNav.classList.remove('border-transparent', 'text-gray-300');
-                activeNav.classList.add('bg-brand-800', 'border-brand-accent', 'text-white');
+                activeNav.classList.remove('border-transparent', 'text-slate-300');
+                activeNav.classList.add('bg-blue-600', 'shadow-lg', 'shadow-blue-600/30', 'border-brand-cyan', 'text-white');
             }
         }
 
-        function renderizarTabelaFretes(lista) {
-            const tbody = document.getElementById('tabela-fretes-body');
+        // Renderização dos Cards Modulares (Estilo Los Angeles Hub)
+        function renderizarFretesCards(lista) {
+            const grid = document.getElementById('fretes-grid');
             const total = document.getElementById('total-registros');
-            if (!tbody) return;
+            if (!grid) return;
 
-            tbody.innerHTML = '';
+            grid.innerHTML = '';
 
             if (!lista || lista.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="py-8 text-center text-gray-500">
-                            <i class="fa-solid fa-magnifying-glass text-3xl text-gray-300 mb-2"></i>
-                            <p>Nenhuma rota encontrada para os filtros aplicados.</p>
-                        </td>
-                    </tr>
+                grid.innerHTML = `
+                    <div class="col-span-full bg-slate-800 border border-slate-700 rounded-2xl p-12 text-center text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-4xl text-slate-600 mb-3"></i>
+                        <p class="font-medium">Nenhuma rota encontrada para os filtros selecionados.</p>
+                    </div>
                 `;
                 if (total) total.innerText = '0 rotas encontradas';
                 return;
             }
 
             lista.forEach(item => {
-                tbody.innerHTML += `
-                    <tr class="border-b hover:bg-gray-50 transition-colors">
-                        <td class="py-3.5 px-6 font-medium text-brand-900">${item.origem}</td>
-                        <td class="py-3.5 px-6 font-semibold">${item.destino}</td>
-                        <td class="py-3.5 px-6"><span class="bg-gray-100 text-gray-800 text-xs px-2 py-0.5 rounded font-bold">${item.uf || 'PE'}</span></td>
-                        <td class="py-3.5 px-6 text-gray-600">${item.veiculo}</td>
-                        <td class="py-3.5 px-6 text-center font-medium">${item.km} KM</td>
-                        <td class="py-3.5 px-6 text-right font-bold text-green-600">R$ ${item.valor}</td>
-                        <td class="py-3.5 px-6 text-center">
-                            <span class="bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-semibold">${item.status}</span>
-                        </td>
-                    </tr>
+                grid.innerHTML += `
+                    <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-600/10 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-md">
+                                    ${item.origem}
+                                </span>
+                                <span class="text-xs bg-emerald-500/10 text-brand-emerald px-2.5 py-1 rounded-full font-bold border border-emerald-500/30">
+                                    ${item.status}
+                                </span>
+                            </div>
+                            
+                            <h4 class="text-lg font-bold text-white mb-1">
+                                ${item.destino} <span class="text-brand-cyan text-sm">(${item.uf || 'PE'})</span>
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-4 font-medium flex items-center">
+                                <i class="fa-solid fa-truck-front mr-1.5 text-slate-500"></i> ${item.veiculo} &bull; ${item.km} KM
+                            </p>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-700/60 flex items-center justify-between mt-2">
+                            <div>
+                                <p class="text-[10px] font-semibold text-slate-500 uppercase">Valor Frete Sugerido</p>
+                                <p class="text-xl font-extrabold text-brand-emerald">R$ ${item.valor}</p>
+                            </div>
+                            <button class="bg-slate-700/50 hover:bg-blue-600 text-slate-300 hover:text-white px-3 py-2 rounded-xl text-xs font-semibold transition">
+                                Ver Detalhes
+                            </button>
+                        </div>
+                    </div>
                 `;
             });
 
-            if (total) total.innerText = `Exibindo ${lista.length} de ${baseFretes.length} rotas da Tabela Suape 6.9`;
+            if (total) total.innerText = `Exibindo ${lista.length} de ${baseFretes.length} rotas ativas`;
         }
 
+        // Filtro em Tempo Real
         function filtrarFretes() {
             const origemSel = (document.getElementById('select-origem')?.value || '').toLowerCase();
             const destinoInput = (document.getElementById('input-destino')?.value || '').toLowerCase().trim();
@@ -484,9 +486,10 @@
                 return bateOrigem && bateDestino && bateVeiculo;
             });
 
-            renderizarTabelaFretes(filtrados);
+            renderizarFretesCards(filtrados);
         }
 
+        // Importação Excel
         function importarPlanilhaProtegida(event) {
             const file = event.target.files[0];
             const senha = document.getElementById('input-senha-excel')?.value || 'ADM2026';
@@ -518,26 +521,26 @@
                                 veiculo: row[3] || 'Geral',
                                 km: row[4] || '100',
                                 valor: row[5] ? parseFloat(row[5]).toLocaleString('pt-BR', {minimumFractionDigits: 2}) : '1.500,00',
-                                status: 'Suape 6.9 Desbloqueada'
+                                status: 'Suape 6.9'
                             });
                         }
                     }
 
                     if (novosFretes.length > 0) {
                         baseFretes = novosFretes;
-                        renderizarTabelaFretes(baseFretes);
-                        alert(`Planilha lida com sucesso! ${novosFretes.length} rotas carregadas.`);
+                        renderizarFretesCards(baseFretes);
+                        alert(`Planilha lida com sucesso! ${novosFretes.length} rotas importadas.`);
                     }
                 } catch (err) {
                     console.error(err);
-                    alert(`Falha ao abrir a planilha com a senha '${senha}'. Tente alternar a senha no campo.`);
+                    alert(`Falha ao abrir a planilha com a senha '${senha}'.`);
                 }
             };
             reader.readAsArrayBuffer(file);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            renderizarTabelaFretes(baseFretes);
+            renderizarFretesCards(baseFretes);
         });
     </script>
 </body>
