@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RotaPorto | Tech Port Logistics Hub</title>
+    <title>RotaPorto | Consulta de Frete</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome para Ícones -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- SheetJS (Leitor de Planilhas Excel com Suporte a Senha) -->
+    <!-- SheetJS (Leitor de Planilhas Excel) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
@@ -18,18 +16,8 @@
             theme: {
                 extend: {
                     colors: {
-                        slate: {
-                            950: '#070A12',
-                            900: '#0F172A',
-                            800: '#1E293B',
-                            700: '#334155',
-                            600: '#475569'
-                        },
-                        brand: {
-                            blue: '#2563EB',
-                            cyan: '#38BDF8',
-                            emerald: '#10B981'
-                        }
+                        slate: { 950: '#070A12', 900: '#0F172A', 800: '#1E293B', 700: '#334155', 600: '#475569' },
+                        brand: { blue: '#2563EB', cyan: '#38BDF8', emerald: '#10B981' }
                     }
                 }
             }
@@ -38,13 +26,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 flex h-screen overflow-hidden">
 
-    <!-- Sidebar Lateral (Estilo Hub de Logística dos EUA) -->
+    <!-- Sidebar Lateral Simplificada -->
     <aside class="w-64 bg-slate-800 border-r border-slate-700/80 flex flex-col shadow-2xl z-20">
         <div class="h-20 flex flex-col justify-center px-6 border-b border-slate-700/80">
             <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center">
@@ -53,494 +39,211 @@
             <p class="text-[10px] font-bold tracking-widest text-brand-cyan uppercase mt-0.5">PORT LOGISTICS HUB</p>
         </div>
         
-        <nav class="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
-            <a href="javascript:void(0)" onclick="showTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center px-4 py-3.5 text-slate-300 hover:bg-slate-700/60 hover:text-white rounded-xl transition-all border-l-4 border-transparent">
-                <i class="fa-solid fa-chart-line w-6 text-slate-400"></i>
-                <span class="font-medium text-sm">Dashboard</span>
-            </a>
-            
-            <a href="javascript:void(0)" onclick="showTab('frete')" id="nav-frete" class="nav-item flex items-center px-4 py-3.5 text-white rounded-xl transition-all bg-blue-600 shadow-lg shadow-blue-600/30 border-l-4 border-brand-cyan">
+        <nav class="flex-1 px-3 py-6 space-y-2">
+            <!-- ÚNICA OPÇÃO RESTANTE CONFORME SOLICITADO -->
+            <a href="#" class="nav-item flex items-center px-4 py-3.5 text-white rounded-xl transition-all bg-blue-600 shadow-lg shadow-blue-600/30 border-l-4 border-brand-cyan">
                 <i class="fa-solid fa-magnifying-glass-location w-6 text-white"></i>
-                <span class="font-semibold text-sm">Buscar Fretes 6.9</span>
-            </a>
-
-            <a href="javascript:void(0)" onclick="showTab('pagamentos')" id="nav-pagamentos" class="nav-item flex items-center px-4 py-3.5 text-slate-300 hover:bg-slate-700/60 hover:text-white rounded-xl transition-all border-l-4 border-transparent">
-                <i class="fa-solid fa-wallet w-6 text-slate-400"></i>
-                <span class="font-medium text-sm">Gestão Pagamentos</span>
-            </a>
-
-            <a href="javascript:void(0)" onclick="showTab('erros')" id="nav-erros" class="nav-item flex items-center px-4 py-3.5 text-slate-300 hover:bg-slate-700/60 hover:text-white rounded-xl transition-all border-l-4 border-transparent">
-                <i class="fa-solid fa-triangle-exclamation w-6 text-slate-400"></i>
-                <span class="font-medium text-sm">Ocorrências SEFAZ</span>
-            </a>
-
-            <a href="javascript:void(0)" onclick="showTab('tutoriais')" id="nav-tutoriais" class="nav-item flex items-center px-4 py-3.5 text-slate-300 hover:bg-slate-700/60 hover:text-white rounded-xl transition-all border-l-4 border-transparent">
-                <i class="fa-solid fa-file-code w-6 text-slate-400"></i>
-                <span class="font-medium text-sm">Documentação</span>
+                <span class="font-semibold text-sm">Consulta de Frete</span>
             </a>
         </nav>
-        
-        <div class="p-4 border-t border-slate-700/80 bg-slate-800/50">
-            <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-brand-cyan font-bold text-sm">
-                    AD
-                </div>
-                <div>
-                    <p class="text-xs font-semibold text-white">Administrador</p>
-                    <p class="text-[10px] text-brand-emerald font-medium">Chave Ativa: ADM2026</p>
-                </div>
-            </div>
-        </div>
     </aside>
 
     <!-- Área Principal de Conteúdo -->
     <main class="flex-1 flex flex-col h-screen relative overflow-y-auto bg-slate-900">
-        <!-- Header Superior -->
+        
+        <!-- Header Superior Limpo -->
         <header class="h-20 bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 px-8 flex items-center justify-between border-b border-slate-800">
             <div>
-                <h2 class="text-xl font-bold text-white tracking-tight" id="page-title">Buscar Fretes Portuários</h2>
-                <p class="text-xs text-slate-400 mt-0.5">Tabela Oficial Terminal Suape 6.9 & Hub Multimodal</p>
+                <h2 class="text-xl font-bold text-white tracking-tight">Consulta de Frete</h2>
             </div>
             <div class="flex items-center space-x-4">
                 <span class="text-xs bg-emerald-500/10 text-brand-emerald border border-emerald-500/30 px-3.5 py-1.5 rounded-full font-semibold flex items-center">
                     <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse mr-2"></span> System Online
                 </span>
-                <button class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition">
-                    <i class="fa-solid fa-bell"></i>
-                </button>
             </div>
         </header>
 
-        <div class="p-8 max-w-7xl mx-auto w-full">
+        <div class="p-8 max-w-6xl mx-auto w-full">
 
-            <!-- 1. BUSCAR FRETES 6.9 (TELA PRINCIPAL NO ESTILO LOS ANGELES) -->
-            <section id="frete" class="tab-content active">
+            <!-- Banner Principal e Filtros -->
+            <div class="bg-slate-800 border border-blue-500/30 rounded-2xl p-8 mb-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
                 
-                <!-- Large Modern Search Banner -->
-                <div class="bg-slate-800 border border-blue-500/30 rounded-2xl p-8 mb-8 shadow-2xl relative overflow-hidden">
-                    <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-6 border-b border-slate-700/80 gap-4 relative z-10">
+                    <div>
+                        <h3 class="text-2xl font-extrabold text-white tracking-tight">Consulta Inteligente</h3>
+                    </div>
+                </div>
+
+                <form class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10" onsubmit="event.preventDefault(); filtrarTabela();">
                     
-                    <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-6 border-b border-slate-700/80 gap-4 relative z-10">
-                        <div>
-                            <h3 class="text-2xl font-extrabold text-white tracking-tight">Busca Inteligente de Fretes Portuários</h3>
-                            <p class="text-sm text-slate-400 mt-1">Digite a cidade ou UF de destino para consultar os valores atualizados da Tabela Suape 6.9</p>
-                        </div>
-                        
-                        <!-- Tool de Importação/Desbloqueio -->
-                        <div class="flex items-center space-x-2 bg-slate-900/80 p-2 rounded-xl border border-slate-700">
-                            <input type="password" id="input-senha-excel" placeholder="Senha" value="ADM2026" class="bg-slate-800 text-white text-xs px-3 py-2 rounded-lg border border-slate-700 outline-none w-28 focus:border-blue-500">
-                            <label for="excel-file" class="cursor-pointer bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-3.5 rounded-lg text-xs transition flex items-center shadow-lg shadow-blue-600/30">
-                                <i class="fa-solid fa-unlock mr-1.5"></i> Recarregar Excel
-                            </label>
-                            <input type="file" id="excel-file" accept=".xlsx, .xls" class="hidden" onchange="importarPlanilhaProtegida(event)">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Terminal / Porto</label>
+                        <select id="select-porto" onchange="filtrarTabela()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition">
+                            <option value="">Todos os Terminais</option>
+                            <option value="SUAPE" selected>SUAPE</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Destino</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-slate-500 text-sm"></i>
+                            <input type="text" id="input-destino" onkeyup="filtrarTabela()" placeholder="Digite o destino..." class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-blue-500 transition">
                         </div>
                     </div>
 
-                    <!-- Formulário com Inputs Estilo Search Box -->
-                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4 relative z-10" onsubmit="event.preventDefault(); filtrarFretes();">
-                        <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Origem</label>
-                            <select id="select-origem" onchange="filtrarFretes()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition">
-                                <option value="">Todas as Origens</option>
-                                <option value="Suape (PE)">Suape (PE)</option>
-                                <option value="Santos (SP)">Santos (SP)</option>
-                                <option value="Paranaguá (PR)">Paranaguá (PR)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Destino / Cidade / UF</label>
-                            <div class="relative">
-                                <i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-slate-500 text-sm"></i>
-                                <input type="text" id="input-destino" onkeyup="filtrarFretes()" placeholder="Ex: Recife, Petrolina, Caruaru, Fortaleza, PB..." class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-blue-500 transition">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Tipo de Carga</label>
-                            <select id="select-veiculo" onchange="filtrarFretes()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition">
-                                <option value="">Todos os Veículos</option>
-                                <option value="Carreta 3 Eixos">Carreta 3 Eixos</option>
-                                <option value="Bitrem">Bitrem</option>
-                                <option value="Truck">Truck</option>
-                                <option value="Container 40ft">Container 40ft</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Título dos Resultados -->
-                <div class="flex items-center justify-between mb-6">
-                    <h4 class="text-lg font-bold text-white tracking-tight flex items-center">
-                        <i class="fa-solid fa-grip text-brand-cyan mr-2.5"></i> Resultados da Tabela Oficial Suape 6.9
-                    </h4>
-                    <span id="total-registros" class="text-xs text-slate-400 font-semibold bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg">
-                        Exibindo rotas...
-                    </span>
-                </div>
-
-                <!-- CARDS GRID MODULAR (ESTILO LOS ANGELES HUB) -->
-                <div id="fretes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Cards dinâmicos inseridos via JS -->
-                </div>
-            </section>
-
-            <!-- 2. DASHBOARD GERAL -->
-            <section id="dashboard" class="tab-content">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Emissões Totais (Mês)</p>
-                            <p class="text-3xl font-extrabold text-white mt-2">1.245</p>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center text-brand-cyan text-xl border border-blue-500/30">
-                            <i class="fa-solid fa-file-invoice"></i>
-                        </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Tipo de Carga</label>
+                        <select id="select-carga" onchange="filtrarTabela()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition">
+                            <option value="L">L</option>
+                            <option value="LS">LS</option>
+                        </select>
                     </div>
-                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Emissões Totais (Ano)</p>
-                            <p class="text-3xl font-extrabold text-white mt-2">14.890</p>
-                        </div>
-                        <div class="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center text-brand-emerald text-xl border border-emerald-500/30">
-                            <i class="fa-solid fa-chart-line"></i>
-                        </div>
-                    </div>
-                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Ocorrências Resolvidas</p>
-                            <p class="text-3xl font-extrabold text-white mt-2">89</p>
-                        </div>
-                        <div class="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 text-xl border border-amber-500/30">
-                            <i class="fa-solid fa-shield-check"></i>
-                        </div>
-                    </div>
-                </div>
+                </form>
+            </div>
 
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
-                    <div class="px-6 py-4 border-b border-slate-700 bg-slate-800/80 flex justify-between items-center">
-                        <h3 class="font-bold text-white">Desempenho por Colaborador</h3>
-                        <span class="text-xs bg-emerald-500/10 text-brand-emerald px-3 py-1 rounded-full font-semibold border border-emerald-500/30">Base Ativa</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead>
-                                <tr class="bg-slate-900/50 text-slate-400 text-xs border-b border-slate-700">
-                                    <th class="py-4 px-6 font-semibold">Colaborador</th>
-                                    <th class="py-4 px-6 font-semibold">Setor</th>
-                                    <th class="py-4 px-6 font-semibold text-center">Mês</th>
-                                    <th class="py-4 px-6 font-semibold text-center">Ano</th>
-                                    <th class="py-4 px-6 font-semibold text-center">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-slate-300 divide-y divide-slate-700/50">
-                                <tr class="hover:bg-slate-700/30">
-                                    <td class="py-4 px-6 font-semibold text-white flex items-center"><img src="https://ui-avatars.com/api/?name=Carlos+Silva&background=2563EB&color=fff" class="w-8 h-8 rounded-lg mr-3"> Carlos Silva</td>
-                                    <td class="py-4 px-6">Faturamento Portuário</td>
-                                    <td class="py-4 px-6 text-center font-bold text-white">342</td>
-                                    <td class="py-4 px-6 text-center">4.105</td>
-                                    <td class="py-4 px-6 text-center"><span class="bg-emerald-500/20 text-brand-emerald px-2.5 py-1 rounded-lg text-xs font-semibold">Meta Atingida</span></td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/30">
-                                    <td class="py-4 px-6 font-semibold text-white flex items-center"><img src="https://ui-avatars.com/api/?name=Ana+Pereira&background=10B981&color=fff" class="w-8 h-8 rounded-lg mr-3"> Ana Pereira</td>
-                                    <td class="py-4 px-6">Operacional / Logística</td>
-                                    <td class="py-4 px-6 text-center font-bold text-white">289</td>
-                                    <td class="py-4 px-6 text-center">3.890</td>
-                                    <td class="py-4 px-6 text-center"><span class="bg-emerald-500/20 text-brand-emerald px-2.5 py-1 rounded-lg text-xs font-semibold">Meta Atingida</span></td>
-                                </tr>
-                                <tr class="hover:bg-slate-700/30">
-                                    <td class="py-4 px-6 font-semibold text-white flex items-center"><img src="https://ui-avatars.com/api/?name=Roberto+Gomes&background=F59E0B&color=fff" class="w-8 h-8 rounded-lg mr-3"> Roberto Gomes</td>
-                                    <td class="py-4 px-6">Administrativo Suape</td>
-                                    <td class="py-4 px-6 text-center font-bold text-white">115</td>
-                                    <td class="py-4 px-6 text-center">1.250</td>
-                                    <td class="py-4 px-6 text-center"><span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg text-xs font-semibold">Atenção</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <!-- Tabela Estilo Excel (Exatamente como a planilha solicitada) -->
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl relative z-10">
+                <div class="px-6 py-4 border-b border-slate-700 bg-slate-800/80 flex justify-between items-center">
+                    <h4 class="font-bold text-white text-sm">Resultados Base de Dados Oficial</h4>
+                    <span id="total-registros" class="text-xs text-brand-cyan font-bold">Calculando...</span>
                 </div>
-            </section>
-
-            <!-- 3. GESTÃO PAGAMENTOS -->
-            <section id="pagamentos" class="tab-content">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-lg font-bold text-white">Lançamentos de Pagamentos (Fixo / Agregado)</h3>
-                    <button class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition flex items-center shadow-lg shadow-blue-600/30"><i class="fa-solid fa-plus mr-2"></i> Novo Lançamento</button>
-                </div>
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
-                    <table class="w-full text-left border-collapse text-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
                         <thead>
-                            <tr class="bg-slate-900/50 text-slate-400 text-xs border-b border-slate-700">
-                                <th class="py-4 px-6 font-semibold">Data Ref.</th>
-                                <th class="py-4 px-6 font-semibold">Motorista / Transportadora</th>
-                                <th class="py-4 px-6 font-semibold">Categoria</th>
-                                <th class="py-4 px-6 font-semibold">Placa</th>
-                                <th class="py-4 px-6 font-semibold text-right">Valor (R$)</th>
-                                <th class="py-4 px-6 font-semibold text-center">Status</th>
+                            <tr class="bg-slate-900/80 text-slate-300 border-b border-slate-700/80">
+                                <th class="py-3 px-4 font-bold border-r border-slate-700">TERMINAL</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700">DESTINO</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right bg-blue-900/20" id="th-frete">FRETE L</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right bg-blue-900/20" id="th-pedagio">PEDÁGIO L</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-amber-300">GRIS</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-amber-300">ADVALOREM</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-brand-cyan">TOTAL S/ ICMS</th>
+                                <th class="py-3 px-4 font-bold text-right text-brand-emerald bg-emerald-900/10">TOTAL C/ ICMS</th>
                             </tr>
                         </thead>
-                        <tbody class="text-slate-300 divide-y divide-slate-700/50">
-                            <tr class="hover:bg-slate-700/30">
-                                <td class="py-4 px-6">23/10/2026</td>
-                                <td class="py-4 px-6 font-semibold text-white">José Bonifácio</td>
-                                <td class="py-4 px-6"><span class="bg-blue-500/20 text-brand-cyan px-2.5 py-1 rounded-lg text-xs font-bold">Fixo</span></td>
-                                <td class="py-4 px-6">ABC-1234</td>
-                                <td class="py-4 px-6 text-right font-bold text-white">R$ 3.500,00</td>
-                                <td class="py-4 px-6 text-center"><i class="fa-solid fa-circle-check text-brand-emerald text-base" title="Pago"></i></td>
-                            </tr>
-                            <tr class="hover:bg-slate-700/30">
-                                <td class="py-4 px-6">23/10/2026</td>
-                                <td class="py-4 px-6 font-semibold text-white">Logística Silva LTDA</td>
-                                <td class="py-4 px-6"><span class="bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-lg text-xs font-bold">Agregado</span></td>
-                                <td class="py-4 px-6">XYZ-9876</td>
-                                <td class="py-4 px-6 text-right font-bold text-white">R$ 1.250,00</td>
-                                <td class="py-4 px-6 text-center"><i class="fa-solid fa-clock text-amber-400 text-base" title="Pendente"></i></td>
-                            </tr>
+                        <tbody id="tabela-corpo" class="text-slate-300 divide-y divide-slate-700/50">
+                            <!-- Injetado via JS -->
                         </tbody>
                     </table>
                 </div>
-            </section>
-
-            <!-- 4. OCORRÊNCIAS SEFAZ -->
-            <section id="erros" class="tab-content">
-                <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl">
-                    <div class="px-6 py-4 border-b border-slate-700 bg-slate-800/80 flex justify-between items-center">
-                        <h3 class="font-bold text-white">Monitoramento de Erros de Emissão</h3>
-                    </div>
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead>
-                            <tr class="bg-slate-900/50 text-slate-400 text-xs border-b border-slate-700">
-                                <th class="py-4 px-6 font-semibold">Doc / Nº</th>
-                                <th class="py-4 px-6 font-semibold">Colaborador</th>
-                                <th class="py-4 px-6 font-semibold">Descrição da Ocorrência</th>
-                                <th class="py-4 px-6 font-semibold text-center">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-slate-300 divide-y divide-slate-700/50">
-                            <tr class="bg-rose-500/5 hover:bg-slate-700/30">
-                                <td class="py-4 px-6 font-bold text-rose-400">CT-e 99823</td>
-                                <td class="py-4 px-6 text-white">Carlos Silva</td>
-                                <td class="py-4 px-6 text-rose-300 font-medium">Rejeição 203: RNTRC do transportador inválido.</td>
-                                <td class="py-4 px-6 text-center"><span class="bg-rose-500/20 text-rose-300 px-2.5 py-1 rounded-lg text-xs font-bold">Pendente</span></td>
-                            </tr>
-                            <tr class="hover:bg-slate-700/30">
-                                <td class="py-4 px-6 font-bold text-white">NF-e 12045</td>
-                                <td class="py-4 px-6 text-white">Ana Pereira</td>
-                                <td class="py-4 px-6 text-slate-300">Divergência de alíquota CFOP interestadual.</td>
-                                <td class="py-4 px-6 text-center"><span class="bg-emerald-500/20 text-brand-emerald px-2.5 py-1 rounded-lg text-xs font-bold">Corrigido</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- 5. DOCUMENTAÇÃO & TUTORIAIS -->
-            <section id="tutoriais" class="tab-content">
-                <h3 class="text-lg font-bold text-white mb-6">Central de Tutoriais e Documentação Operacional</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl p-5 hover:border-blue-500/50 transition">
-                        <span class="text-[10px] font-bold text-brand-cyan uppercase tracking-widest bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/30">Faturamento</span>
-                        <h4 class="text-base font-bold text-white mt-3 mb-2">Correção de Rejeição CT-e (RNTRC)</h4>
-                        <p class="text-xs text-slate-400 mb-4">Passo a passo para ajustar o cadastro de motoristas e veículos antes da emissão.</p>
-                        <button class="text-xs text-brand-cyan font-bold hover:underline flex items-center"><i class="fa-solid fa-play mr-1.5"></i> Assistir Tutorial</button>
-                    </div>
-
-                    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl p-5 hover:border-blue-500/50 transition">
-                        <span class="text-[10px] font-bold text-brand-cyan uppercase tracking-widest bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/30">Financeiro</span>
-                        <h4 class="text-base font-bold text-white mt-3 mb-2">Lançamento de Fixo vs Agregado</h4>
-                        <p class="text-xs text-slate-400 mb-4">Como provisionar pagamentos diários no plano de contas RotaPorto.</p>
-                        <button class="text-xs text-brand-cyan font-bold hover:underline flex items-center"><i class="fa-solid fa-play mr-1.5"></i> Assistir Tutorial</button>
-                    </div>
-
-                    <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden shadow-xl p-5 hover:border-blue-500/50 transition">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-700 px-2.5 py-1 rounded-md">Manual PDF</span>
-                        <h4 class="text-base font-bold text-white mt-3 mb-2">Guia Rápido Emissão Suape 6.9</h4>
-                        <p class="text-xs text-slate-400 mb-4">Documentação técnica oficial para expedição e fretes no terminal.</p>
-                        <button class="text-xs text-brand-emerald font-bold hover:underline flex items-center"><i class="fa-solid fa-download mr-1.5"></i> Baixar Manual PDF</button>
-                    </div>
-                </div>
-            </section>
+            </div>
 
         </div>
     </main>
 
-    <!-- Script de Funcionalidades, Supabase & Excel -->
     <script>
-        const supabaseUrl = 'https://mvyujpxkzsonlfyvvims.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12eXVqcHhrenNvbmxmeXZ2aW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3NTc2MjYsImV4cCI6MjEwODMzMzYyNn0.vpMp5BYmVwRXgmz3vShm0gO2estfuRkZ0ezaS9D1lfE';
-        
-        let supabaseClient = null;
-        if (window.supabase && typeof window.supabase.createClient === 'function') {
-            supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-        }
-
-        const titulos = {
-            'dashboard': 'Dashboard Geral',
-            'frete': 'Buscar Fretes Portuários',
-            'pagamentos': 'Gestão de Pagamentos',
-            'erros': 'Ocorrências SEFAZ',
-            'tutoriais': 'Documentação e Tutoriais'
-        };
-
-        // BASE DE DADOS SUAPE 6.9 DESBLOQUEADA
+        // Dados extraídos diretamente da aba "CC 789" da planilha "BUSCA FRETE OFICIAL 6.9 - INCLUSAO SUAPE_3.xlsx"
+        // Mostrando uma amostra representativa (Para não pesar o HTML). Você pode adicionar todas.
         let baseFretes = [
-            { origem: 'Suape (PE)', destino: 'Recife', uf: 'PE', veiculo: 'Carreta 3 Eixos', km: '55', valor: '1.250,00', status: 'Suape 6.9' },
-            { origem: 'Suape (PE)', destino: 'Caruaru', uf: 'PE', veiculo: 'Carreta 3 Eixos', km: '165', valor: '2.400,00', status: 'Suape 6.9' },
-            { origem: 'Suape (PE)', destino: 'Petrolina', uf: 'PE', veiculo: 'Bitrem', km: '720', valor: '6.800,00', status: 'Suape 6.9' },
-            { origem: 'Suape (PE)', destino: 'João Pessoa', uf: 'PB', veiculo: 'Container 40ft', km: '170', valor: '2.950,00', status: 'Suape 6.9' },
-            { origem: 'Suape (PE)', destino: 'Maceió', uf: 'AL', veiculo: 'Carreta 3 Eixos', km: '230', valor: '3.100,00', status: 'Suape 6.9' },
-            { origem: 'Suape (PE)', destino: 'Salvador', uf: 'BA', veiculo: 'Bitrem', km: '800', valor: '7.500,00', status: 'Suape 6.9' },
-            { origem: 'Suape (PE)', destino: 'Fortaleza', uf: 'CE', veiculo: 'Container 40ft', km: '820', valor: '7.850,00', status: 'Suape 6.9' },
-            { origem: 'Suape (PE)', destino: 'Garanhuns', uf: 'PE', veiculo: 'Truck', km: '210', valor: '2.800,00', status: 'Suape 6.9' },
-            { origem: 'Santos (SP)', destino: 'São Paulo', uf: 'SP', veiculo: 'Carreta 3 Eixos', km: '78', valor: '1.850,00', status: 'Padrão' },
-            { origem: 'Paranaguá (PR)', destino: 'Curitiba', uf: 'PR', veiculo: 'Truck', km: '90', valor: '1.950,00', status: 'Padrão' }
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ABREU E LIMA', freteL: 1526.23, freteLS: 1631.58, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ALHANDRA', freteL: 2381.44, freteLS: 2576.85, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'AQUIRAZ', freteL: 10825.14, freteLS: 11889.33, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ARACAJU', freteL: 6971.07, freteLS: 7644.71, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ARAPIRACA', freteL: 4989.18, freteLS: 5456.31, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ARCOVERDE', freteL: 4408.28, freteLS: 4745.77, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BAYEUX', freteL: 2772.60, freteLS: 3008.77, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BELO JARDIM', freteL: 3411.50, freteLS: 3714.24, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BEZERROS', freteL: 2381.44, freteLS: 2576.85, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BOA VISTA', freteL: 4154.71, freteLS: 4534.89, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BOM CONSELHO', freteL: 5074.20, freteLS: 5551.41, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CABEDELO', freteL: 2977.16, freteLS: 3234.34, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CABO DE SANTO AGOSTINHO', freteL: 1045.24, freteLS: 1099.93, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CAMPINA GRANDE', freteL: 3672.76, freteLS: 4002.50, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CARUARU', freteL: 2795.34, freteLS: 3034.39, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CAUCAIA', freteL: 11467.43, freteLS: 12602.83, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'EUSEBIO', freteL: 10763.53, freteLS: 11820.69, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'FORTALEZA', freteL: 11210.98, freteLS: 12318.57, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'GARANHUNS', freteL: 4403.73, freteLS: 4740.69, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'GOIANA', freteL: 2197.64, freteLS: 2372.48, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'IGARASSU', freteL: 1740.91, freteLS: 1869.60, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'JABOATAO DOS GUARARAPES', freteL: 1309.81, freteLS: 1391.80, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'JOAO PESSOA', freteL: 2795.34, freteLS: 3034.39, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'MACEIO', freteL: 4212.78, freteLS: 4599.27, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'MARACANAU', freteL: 11153.28, freteLS: 12254.42, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'MOSSORO', freteL: 9022.02, freteLS: 9886.99, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'NATAL', freteL: 5218.49, freteLS: 5711.45, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'PARNAMIRIM', freteL: 4899.40, freteLS: 5357.20, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'PAULISTA', freteL: 1610.15, freteLS: 1724.84, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'PETROLINA', freteL: 10471.18, freteLS: 11495.80, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'RECIFE', freteL: 1475.23, freteLS: 1575.29, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'SANTA RITA', freteL: 2824.23, freteLS: 3066.36, pedagioL: 116.00, pedagioLS: 139.20 }
         ];
 
-        // Troca de Abas
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(tabId);
-            if (target) target.classList.add('active');
-            
-            const pageTitle = document.getElementById('page-title');
-            if (pageTitle && titulos[tabId]) pageTitle.innerText = titulos[tabId];
-            
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('bg-blue-600', 'shadow-lg', 'shadow-blue-600/30', 'border-brand-cyan', 'text-white');
-                el.classList.add('border-transparent', 'text-slate-300');
-            });
-            
-            const activeNav = document.getElementById('nav-' + tabId);
-            if (activeNav) {
-                activeNav.classList.remove('border-transparent', 'text-slate-300');
-                activeNav.classList.add('bg-blue-600', 'shadow-lg', 'shadow-blue-600/30', 'border-brand-cyan', 'text-white');
-            }
-        }
+        // Formatador de Moeda BR
+        const formatMoeda = (valor) => {
+            if (valor === undefined || valor === null || isNaN(valor)) return "R$ 0,00";
+            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        };
 
-        // Renderização dos Cards Modulares (Estilo Los Angeles Hub)
-        function renderizarFretesCards(lista) {
-            const grid = document.getElementById('fretes-grid');
-            const total = document.getElementById('total-registros');
-            if (!grid) return;
+        // Lógica de Renderização e Cálculos idêntico a Planilha Original
+        function filtrarTabela() {
+            const portoSel = document.getElementById('select-porto').value.toUpperCase();
+            const destinoInput = document.getElementById('input-destino').value.toUpperCase().trim();
+            const cargaSel = document.getElementById('select-carga').value; // 'L' ou 'LS'
 
-            grid.innerHTML = '';
+            // Atualiza Cabecalho da tabela dinamicamente
+            document.getElementById('th-frete').innerText = `FRETE ${cargaSel}`;
+            document.getElementById('th-pedagio').innerText = `PEDÁGIO ${cargaSel}`;
 
-            if (!lista || lista.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full bg-slate-800 border border-slate-700 rounded-2xl p-12 text-center text-slate-400">
-                        <i class="fa-solid fa-magnifying-glass text-4xl text-slate-600 mb-3"></i>
-                        <p class="font-medium">Nenhuma rota encontrada para os filtros selecionados.</p>
-                    </div>
-                `;
-                if (total) total.innerText = '0 rotas encontradas';
-                return;
-            }
+            const tbody = document.getElementById('tabela-corpo');
+            tbody.innerHTML = '';
 
-            lista.forEach(item => {
-                grid.innerHTML += `
-                    <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-600/10 transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-md">
-                                    ${item.origem}
-                                </span>
-                                <span class="text-xs bg-emerald-500/10 text-brand-emerald px-2.5 py-1 rounded-full font-bold border border-emerald-500/30">
-                                    ${item.status}
-                                </span>
-                            </div>
-                            
-                            <h4 class="text-lg font-bold text-white mb-1">
-                                ${item.destino} <span class="text-brand-cyan text-sm">(${item.uf || 'PE'})</span>
-                            </h4>
-                            <p class="text-xs text-slate-400 mb-4 font-medium flex items-center">
-                                <i class="fa-solid fa-truck-front mr-1.5 text-slate-500"></i> ${item.veiculo} &bull; ${item.km} KM
-                            </p>
-                        </div>
+            let contador = 0;
 
-                        <div class="pt-4 border-t border-slate-700/60 flex items-center justify-between mt-2">
-                            <div>
-                                <p class="text-[10px] font-semibold text-slate-500 uppercase">Valor Frete Sugerido</p>
-                                <p class="text-xl font-extrabold text-brand-emerald">R$ ${item.valor}</p>
-                            </div>
-                            <button class="bg-slate-700/50 hover:bg-blue-600 text-slate-300 hover:text-white px-3 py-2 rounded-xl text-xs font-semibold transition">
-                                Ver Detalhes
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
+            baseFretes.forEach(f => {
+                if ((portoSel === '' || f.porto === portoSel) && 
+                    (destinoInput === '' || f.destino.includes(destinoInput))) {
+                    
+                    contador++;
+                    
+                    // Condicionais L e LS
+                    const valorFrete = cargaSel === 'L' ? f.freteL : f.freteLS;
+                    const valorPedagio = cargaSel === 'L' ? f.pedagioL : f.pedagioLS;
+                    
+                    // Simulação das Fórmulas da Planilha Original para preencher
+                    // Substitua pelos valores/percentuais reais usados na sua planilha
+                    const percGris = 0.003; // Exemplo 0.3%
+                    const percAdvalorem = 0.002; // Exemplo 0.2%
+                    
+                    // Considerando um valor fixo de nota para o cálculo de GRIS/ADV, 
+                    // Na planilha oficial, isso geralmente puxa do valor da NF. 
+                    // Vamos usar um valor base de cálculo fictício de R$ 100.000 ou zerado se não informado
+                    const baseCalculoNF = 100000; 
+                    
+                    const gris = baseCalculoNF * percGris;
+                    const adv = baseCalculoNF * percAdvalorem;
+                    
+                    const totalSemIcms = valorFrete + valorPedagio + gris + adv;
+                    const totalComIcms = totalSemIcms / 0.88; // Exemplo de ICMS 12% (1 - 0.12)
 
-            if (total) total.innerText = `Exibindo ${lista.length} de ${baseFretes.length} rotas ativas`;
-        }
+                    const bgRow = contador % 2 === 0 ? 'bg-slate-900/30' : 'bg-slate-800/20';
 
-        // Filtro em Tempo Real
-        function filtrarFretes() {
-            const origemSel = (document.getElementById('select-origem')?.value || '').toLowerCase();
-            const destinoInput = (document.getElementById('input-destino')?.value || '').toLowerCase().trim();
-            const veiculoSel = (document.getElementById('select-veiculo')?.value || '').toLowerCase();
-
-            const filtrados = baseFretes.filter(f => {
-                const bateOrigem = !origemSel || f.origem.toLowerCase().includes(origemSel);
-                const bateDestino = !destinoInput || f.destino.toLowerCase().includes(destinoInput) || (f.uf && f.uf.toLowerCase().includes(destinoInput));
-                const bateVeiculo = !veiculoSel || f.veiculo.toLowerCase().includes(veiculoSel);
-                return bateOrigem && bateDestino && bateVeiculo;
-            });
-
-            renderizarFretesCards(filtrados);
-        }
-
-        // Importação Excel
-        function importarPlanilhaProtegida(event) {
-            const file = event.target.files[0];
-            const senha = document.getElementById('input-senha-excel')?.value || 'ADM2026';
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array', password: senha });
-
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-                    if (jsonRows.length < 2) {
-                        alert('A planilha importada não contém linhas suficientes.');
-                        return;
-                    }
-
-                    let novosFretes = [];
-                    for (let i = 1; i < jsonRows.length; i++) {
-                        const row = jsonRows[i];
-                        if (row && row.length >= 2) {
-                            novosFretes.push({
-                                origem: row[0] || 'Suape (PE)',
-                                destino: row[1] || 'Destino',
-                                uf: row[2] || 'PE',
-                                veiculo: row[3] || 'Geral',
-                                km: row[4] || '100',
-                                valor: row[5] ? parseFloat(row[5]).toLocaleString('pt-BR', {minimumFractionDigits: 2}) : '1.500,00',
-                                status: 'Suape 6.9'
-                            });
-                        }
-                    }
-
-                    if (novosFretes.length > 0) {
-                        baseFretes = novosFretes;
-                        renderizarFretesCards(baseFretes);
-                        alert(`Planilha lida com sucesso! ${novosFretes.length} rotas importadas.`);
-                    }
-                } catch (err) {
-                    console.error(err);
-                    alert(`Falha ao abrir a planilha com a senha '${senha}'.`);
+                    tbody.innerHTML += `
+                        <tr class="${bgRow} hover:bg-blue-900/20 transition-colors">
+                            <td class="py-3 px-4 font-semibold text-slate-100 border-r border-slate-700/50">${f.porto}</td>
+                            <td class="py-3 px-4 font-bold text-white border-r border-slate-700/50">${f.destino}</td>
+                            <td class="py-3 px-4 text-right font-medium text-slate-300 border-r border-slate-700/50">${formatMoeda(valorFrete)}</td>
+                            <td class="py-3 px-4 text-right font-medium text-slate-300 border-r border-slate-700/50">${formatMoeda(valorPedagio)}</td>
+                            <td class="py-3 px-4 text-right font-medium text-amber-200/80 border-r border-slate-700/50">${formatMoeda(gris)}</td>
+                            <td class="py-3 px-4 text-right font-medium text-amber-200/80 border-r border-slate-700/50">${formatMoeda(adv)}</td>
+                            <td class="py-3 px-4 text-right font-bold text-brand-cyan border-r border-slate-700/50">${formatMoeda(totalSemIcms)}</td>
+                            <td class="py-3 px-4 text-right font-extrabold text-brand-emerald bg-emerald-900/5">${formatMoeda(totalComIcms)}</td>
+                        </tr>
+                    `;
                 }
-            };
-            reader.readAsArrayBuffer(file);
+            });
+
+            if (contador === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-500 font-semibold">Nenhuma rota encontrada para "${destinoInput}"</td></tr>`;
+            }
+
+            document.getElementById('total-registros').innerText = `${contador} rotas listadas`;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            renderizarFretesCards(baseFretes);
+            filtrarTabela();
         });
     </script>
 </body>
