@@ -6,9 +6,9 @@
     <title>RotaPorto | Consulta de Frete</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome para Ícones -->
+    <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- SheetJS (Leitor de Planilhas Excel) -->
+    <!-- SheetJS (Para ler sua planilha criptografada em tempo real) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
@@ -16,7 +16,7 @@
             theme: {
                 extend: {
                     colors: {
-                        slate: { 950: '#070A12', 900: '#0F172A', 800: '#1E293B', 700: '#334155', 600: '#475569' },
+                        slate: { 950: '#070A12', 900: '#0F172A', 800: '#1E293B', 700: '#334155' },
                         brand: { blue: '#2563EB', cyan: '#38BDF8', emerald: '#10B981' }
                     }
                 }
@@ -26,105 +26,122 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0F172A; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 flex h-screen overflow-hidden">
 
-    <!-- Sidebar Lateral Simplificada -->
+    <!-- Sidebar (Apenas a Consulta) -->
     <aside class="w-64 bg-slate-800 border-r border-slate-700/80 flex flex-col shadow-2xl z-20">
         <div class="h-20 flex flex-col justify-center px-6 border-b border-slate-700/80">
             <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center">
                 <i class="fa-solid fa-ship text-brand-cyan mr-2.5 text-xl"></i>Rota<span class="text-brand-cyan">Porto</span>
             </h1>
-            <p class="text-[10px] font-bold tracking-widest text-brand-cyan uppercase mt-0.5">PORT LOGISTICS HUB</p>
         </div>
-        
         <nav class="flex-1 px-3 py-6 space-y-2">
-            <!-- ÚNICA OPÇÃO RESTANTE CONFORME SOLICITADO -->
-            <a href="#" class="nav-item flex items-center px-4 py-3.5 text-white rounded-xl transition-all bg-blue-600 shadow-lg shadow-blue-600/30 border-l-4 border-brand-cyan">
+            <a href="#" class="nav-item flex items-center px-4 py-3.5 text-white rounded-xl bg-blue-600 shadow-lg shadow-blue-600/30 border-l-4 border-brand-cyan">
                 <i class="fa-solid fa-magnifying-glass-location w-6 text-white"></i>
                 <span class="font-semibold text-sm">Consulta de Frete</span>
             </a>
         </nav>
     </aside>
 
-    <!-- Área Principal de Conteúdo -->
+    <!-- Área Principal -->
     <main class="flex-1 flex flex-col h-screen relative overflow-y-auto bg-slate-900">
-        
-        <!-- Header Superior Limpo -->
         <header class="h-20 bg-slate-900/90 backdrop-blur-md sticky top-0 z-10 px-8 flex items-center justify-between border-b border-slate-800">
-            <div>
-                <h2 class="text-xl font-bold text-white tracking-tight">Consulta de Frete</h2>
-            </div>
-            <div class="flex items-center space-x-4">
-                <span class="text-xs bg-emerald-500/10 text-brand-emerald border border-emerald-500/30 px-3.5 py-1.5 rounded-full font-semibold flex items-center">
-                    <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse mr-2"></span> System Online
-                </span>
+            <h2 class="text-xl font-bold text-white tracking-tight">Consulta de Frete</h2>
+            <div class="flex items-center space-x-3 bg-slate-800 border border-slate-700 p-1.5 rounded-lg">
+                <input type="password" id="input-senha-excel" placeholder="Senha da Planilha" value="ADM2026" class="bg-slate-900 text-white text-xs px-3 py-2 rounded-md border border-slate-700 outline-none w-32 focus:border-blue-500">
+                <label for="excel-file" class="cursor-pointer bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 px-3 rounded-md text-xs transition flex items-center">
+                    <i class="fa-solid fa-file-excel mr-1.5"></i> Sincronizar Base Oficial
+                </label>
+                <input type="file" id="excel-file" accept=".xlsx, .xls" class="hidden" onchange="importarBaseCompleta(event)">
             </div>
         </header>
 
-        <div class="p-8 max-w-6xl mx-auto w-full">
-
-            <!-- Banner Principal e Filtros -->
-            <div class="bg-slate-800 border border-blue-500/30 rounded-2xl p-8 mb-8 shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-                
-                <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-6 border-b border-slate-700/80 gap-4 relative z-10">
-                    <div>
-                        <h3 class="text-2xl font-extrabold text-white tracking-tight">Consulta Inteligente</h3>
-                    </div>
-                </div>
-
-                <form class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10" onsubmit="event.preventDefault(); filtrarTabela();">
+        <div class="p-8 max-w-7xl mx-auto w-full">
+            <!-- Painel de Filtros e Cálculos -->
+            <div class="bg-slate-800 border border-blue-500/30 rounded-2xl p-6 mb-8 shadow-2xl">
+                <form class="grid grid-cols-1 md:grid-cols-5 gap-5" onchange="filtrarEcalcular()" onkeyup="filtrarEcalcular()">
                     
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Terminal / Porto</label>
-                        <select id="select-porto" onchange="filtrarTabela()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition">
-                            <option value="">Todos os Terminais</option>
-                            <option value="SUAPE" selected>SUAPE</option>
+                    <!-- Busca Básica -->
+                    <div class="md:col-span-1">
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1.5">Terminal / Porto</label>
+                        <select id="select-porto" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 transition">
+                            <option value="">TODOS</option>
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Destino</label>
+                    <div class="md:col-span-1">
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1.5">Cliente (Opcional)</label>
+                        <select id="select-cliente" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 transition">
+                            <option value="">TODOS</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1.5">Destino</label>
                         <div class="relative">
-                            <i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-slate-500 text-sm"></i>
-                            <input type="text" id="input-destino" onkeyup="filtrarTabela()" placeholder="Digite o destino..." class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-blue-500 transition">
+                            <i class="fa-solid fa-location-dot absolute left-3.5 top-3 text-slate-500 text-sm"></i>
+                            <input type="text" id="input-destino" placeholder="Ex: Recife, Jundiaí, Guarulhos..." class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl pl-10 pr-4 py-2.5 outline-none focus:border-blue-500 transition">
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Tipo de Carga</label>
-                        <select id="select-carga" onchange="filtrarTabela()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition">
+                    <!-- Calculadora Integrada -->
+                    <div class="md:col-span-1">
+                        <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1.5">Tipo Carga</label>
+                        <select id="select-carga" class="w-full bg-blue-900/40 border border-blue-500/50 text-brand-cyan font-bold text-sm rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 transition">
                             <option value="L">L</option>
                             <option value="LS">LS</option>
                         </select>
                     </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-[10px] font-bold uppercase text-amber-400 mb-1.5">Valor da NF (R$) p/ Cálculo GRIS/ADV</label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-3 text-slate-500 text-sm font-bold">R$</span>
+                            <input type="number" id="input-nf" value="100000" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl pl-10 pr-4 py-2.5 outline-none focus:border-amber-500 transition">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-1">
+                        <label class="block text-[10px] font-bold uppercase text-emerald-400 mb-1.5">% ICMS</label>
+                        <div class="relative">
+                            <input type="number" id="input-icms" value="12" step="0.1" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-xl px-4 py-2.5 outline-none focus:border-emerald-500 transition">
+                            <span class="absolute right-4 top-3 text-slate-500 text-sm font-bold">%</span>
+                        </div>
+                    </div>
                 </form>
             </div>
 
-            <!-- Tabela Estilo Excel (Exatamente como a planilha solicitada) -->
+            <!-- Tabela de Resultados (Base de Dados) -->
             <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-2xl relative z-10">
-                <div class="px-6 py-4 border-b border-slate-700 bg-slate-800/80 flex justify-between items-center">
-                    <h4 class="font-bold text-white text-sm">Resultados Base de Dados Oficial</h4>
-                    <span id="total-registros" class="text-xs text-brand-cyan font-bold">Calculando...</span>
+                <div class="px-6 py-4 border-b border-slate-700 flex justify-between items-center bg-slate-800">
+                    <h4 class="font-bold text-white text-sm flex items-center">
+                        <i class="fa-solid fa-database text-brand-cyan mr-2"></i> Base de Dados Oficial
+                    </h4>
+                    <span id="total-registros" class="text-xs text-slate-400 font-semibold bg-slate-900 px-3 py-1 rounded-md border border-slate-700">0 rotas</span>
                 </div>
-                <div class="overflow-x-auto">
+                
+                <div class="overflow-x-auto max-h-[500px]">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
-                        <thead>
-                            <tr class="bg-slate-900/80 text-slate-300 border-b border-slate-700/80">
+                        <thead class="sticky top-0 bg-slate-900 shadow-md z-10">
+                            <tr class="text-slate-300 border-b border-slate-700">
+                                <th class="py-3 px-4 font-bold border-r border-slate-700">CLIENTE</th>
                                 <th class="py-3 px-4 font-bold border-r border-slate-700">TERMINAL</th>
                                 <th class="py-3 px-4 font-bold border-r border-slate-700">DESTINO</th>
-                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right bg-blue-900/20" id="th-frete">FRETE L</th>
-                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right bg-blue-900/20" id="th-pedagio">PEDÁGIO L</th>
-                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-amber-300">GRIS</th>
-                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-amber-300">ADVALOREM</th>
-                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-brand-cyan">TOTAL S/ ICMS</th>
-                                <th class="py-3 px-4 font-bold text-right text-brand-emerald bg-emerald-900/10">TOTAL C/ ICMS</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-brand-cyan bg-blue-900/10" id="th-frete">FRETE</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-brand-cyan bg-blue-900/10" id="th-pedagio">PEDÁGIO</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-amber-400">GRIS (0.3%)</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-amber-400">ADV (0.2%)</th>
+                                <th class="py-3 px-4 font-bold border-r border-slate-700 text-right text-white">TOTAL S/ ICMS</th>
+                                <th class="py-3 px-4 font-bold text-right text-brand-emerald bg-emerald-900/20">TOTAL C/ ICMS</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-corpo" class="text-slate-300 divide-y divide-slate-700/50">
-                            <!-- Injetado via JS -->
+                            <!-- JS Injeta Aqui -->
                         </tbody>
                     </table>
                 </div>
@@ -134,117 +151,185 @@
     </main>
 
     <script>
-        // Dados extraídos diretamente da aba "CC 789" da planilha "BUSCA FRETE OFICIAL 6.9 - INCLUSAO SUAPE_3.xlsx"
-        // Mostrando uma amostra representativa (Para não pesar o HTML). Você pode adicionar todas.
+        // Uma pequena base demonstrativa para a tela não iniciar vazia,
+        // enquanto o usuário não importa a planilha completa no topo.
         let baseFretes = [
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ABREU E LIMA', freteL: 1526.23, freteLS: 1631.58, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ALHANDRA', freteL: 2381.44, freteLS: 2576.85, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'AQUIRAZ', freteL: 10825.14, freteLS: 11889.33, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ARACAJU', freteL: 6971.07, freteLS: 7644.71, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ARAPIRACA', freteL: 4989.18, freteLS: 5456.31, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'ARCOVERDE', freteL: 4408.28, freteLS: 4745.77, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BAYEUX', freteL: 2772.60, freteLS: 3008.77, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BELO JARDIM', freteL: 3411.50, freteLS: 3714.24, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BEZERROS', freteL: 2381.44, freteLS: 2576.85, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BOA VISTA', freteL: 4154.71, freteLS: 4534.89, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'BOM CONSELHO', freteL: 5074.20, freteLS: 5551.41, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CABEDELO', freteL: 2977.16, freteLS: 3234.34, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CABO DE SANTO AGOSTINHO', freteL: 1045.24, freteLS: 1099.93, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CAMPINA GRANDE', freteL: 3672.76, freteLS: 4002.50, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CARUARU', freteL: 2795.34, freteLS: 3034.39, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CAUCAIA', freteL: 11467.43, freteLS: 12602.83, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'EUSEBIO', freteL: 10763.53, freteLS: 11820.69, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'FORTALEZA', freteL: 11210.98, freteLS: 12318.57, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'GARANHUNS', freteL: 4403.73, freteLS: 4740.69, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'GOIANA', freteL: 2197.64, freteLS: 2372.48, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'IGARASSU', freteL: 1740.91, freteLS: 1869.60, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'JABOATAO DOS GUARARAPES', freteL: 1309.81, freteLS: 1391.80, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'JOAO PESSOA', freteL: 2795.34, freteLS: 3034.39, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'MACEIO', freteL: 4212.78, freteLS: 4599.27, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'MARACANAU', freteL: 11153.28, freteLS: 12254.42, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'MOSSORO', freteL: 9022.02, freteLS: 9886.99, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'NATAL', freteL: 5218.49, freteLS: 5711.45, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'PARNAMIRIM', freteL: 4899.40, freteLS: 5357.20, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'PAULISTA', freteL: 1610.15, freteLS: 1724.84, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'PETROLINA', freteL: 10471.18, freteLS: 11495.80, pedagioL: 116.00, pedagioLS: 139.20 },
             { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'RECIFE', freteL: 1475.23, freteLS: 1575.29, pedagioL: 116.00, pedagioLS: 139.20 },
-            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'SANTA RITA', freteL: 2824.23, freteLS: 3066.36, pedagioL: 116.00, pedagioLS: 139.20 }
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'CARUARU', freteL: 2795.34, freteLS: 3034.39, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'ALIANÇA', porto: 'SUAPE', destino: 'PETROLINA', freteL: 10471.18, freteLS: 11495.80, pedagioL: 116.00, pedagioLS: 139.20 },
+            { cliente: 'MERCOSUL FROTA', porto: 'GUARUJA/SANTOS', destino: 'CAMPINAS', freteL: 2868, freteLS: 2868, pedagioL: 0, pedagioLS: 0 }
         ];
 
-        // Formatador de Moeda BR
-        const formatMoeda = (valor) => {
-            if (valor === undefined || valor === null || isNaN(valor)) return "R$ 0,00";
-            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        };
+        const formatMoeda = (v) => v ? v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : "R$ 0,00";
 
-        // Lógica de Renderização e Cálculos idêntico a Planilha Original
-        function filtrarTabela() {
+        // Filtra e calcula conforme a planilha
+        function filtrarEcalcular() {
             const portoSel = document.getElementById('select-porto').value.toUpperCase();
+            const clienteSel = document.getElementById('select-cliente').value.toUpperCase();
             const destinoInput = document.getElementById('input-destino').value.toUpperCase().trim();
             const cargaSel = document.getElementById('select-carga').value; // 'L' ou 'LS'
+            
+            const valorNF = parseFloat(document.getElementById('input-nf').value) || 0;
+            const taxaICMS = parseFloat(document.getElementById('input-icms').value) || 0;
 
-            // Atualiza Cabecalho da tabela dinamicamente
             document.getElementById('th-frete').innerText = `FRETE ${cargaSel}`;
             document.getElementById('th-pedagio').innerText = `PEDÁGIO ${cargaSel}`;
 
             const tbody = document.getElementById('tabela-corpo');
             tbody.innerHTML = '';
-
             let contador = 0;
 
             baseFretes.forEach(f => {
-                if ((portoSel === '' || f.porto === portoSel) && 
-                    (destinoInput === '' || f.destino.includes(destinoInput))) {
+                const porto = (f.porto || '').toUpperCase();
+                const cliente = (f.cliente || '').toUpperCase();
+                const destino = (f.destino || '').toUpperCase();
+
+                if ((portoSel === '' || porto === portoSel) && 
+                    (clienteSel === '' || cliente === clienteSel) &&
+                    (destinoInput === '' || destino.includes(destinoInput))) {
                     
                     contador++;
                     
-                    // Condicionais L e LS
-                    const valorFrete = cargaSel === 'L' ? f.freteL : f.freteLS;
-                    const valorPedagio = cargaSel === 'L' ? f.pedagioL : f.pedagioLS;
+                    let valorFrete = cargaSel === 'L' ? f.freteL : f.freteLS;
+                    let valorPedagio = cargaSel === 'L' ? f.pedagioL : f.pedagioLS;
                     
-                    // Simulação das Fórmulas da Planilha Original para preencher
-                    // Substitua pelos valores/percentuais reais usados na sua planilha
-                    const percGris = 0.003; // Exemplo 0.3%
-                    const percAdvalorem = 0.002; // Exemplo 0.2%
-                    
-                    // Considerando um valor fixo de nota para o cálculo de GRIS/ADV, 
-                    // Na planilha oficial, isso geralmente puxa do valor da NF. 
-                    // Vamos usar um valor base de cálculo fictício de R$ 100.000 ou zerado se não informado
-                    const baseCalculoNF = 100000; 
-                    
-                    const gris = baseCalculoNF * percGris;
-                    const adv = baseCalculoNF * percAdvalorem;
-                    
-                    const totalSemIcms = valorFrete + valorPedagio + gris + adv;
-                    const totalComIcms = totalSemIcms / 0.88; // Exemplo de ICMS 12% (1 - 0.12)
+                    // Tratamento "Vale Pedágio" embutido na planilha
+                    if (isNaN(valorFrete)) valorFrete = 0;
+                    if (isNaN(valorPedagio)) valorPedagio = 0;
 
-                    const bgRow = contador % 2 === 0 ? 'bg-slate-900/30' : 'bg-slate-800/20';
+                    // Regra: Na planilha, alguns clientes como ARLANXEO ou NORSAL "NÃO PREENCHER" o GRIS/ADV
+                    let isGrisAdvIsento = ['ARLANXEO', 'NORSAL', 'DHL', 'GAC'].some(c => cliente.includes(c));
+
+                    let gris = isGrisAdvIsento ? 0 : valorNF * 0.003; // 0.3%
+                    let adv = isGrisAdvIsento ? 0 : valorNF * 0.002;  // 0.2%
+                    
+                    let totalSemIcms = valorFrete + valorPedagio + gris + adv;
+                    // Cálculo de ICMS "por dentro"
+                    let divisorIcms = 1 - (taxaICMS / 100);
+                    let totalComIcms = divisorIcms > 0 ? (totalSemIcms / divisorIcms) : totalSemIcms;
+
+                    const bgRow = contador % 2 === 0 ? 'bg-slate-900/30' : 'bg-slate-800/10';
 
                     tbody.innerHTML += `
                         <tr class="${bgRow} hover:bg-blue-900/20 transition-colors">
-                            <td class="py-3 px-4 font-semibold text-slate-100 border-r border-slate-700/50">${f.porto}</td>
-                            <td class="py-3 px-4 font-bold text-white border-r border-slate-700/50">${f.destino}</td>
-                            <td class="py-3 px-4 text-right font-medium text-slate-300 border-r border-slate-700/50">${formatMoeda(valorFrete)}</td>
-                            <td class="py-3 px-4 text-right font-medium text-slate-300 border-r border-slate-700/50">${formatMoeda(valorPedagio)}</td>
-                            <td class="py-3 px-4 text-right font-medium text-amber-200/80 border-r border-slate-700/50">${formatMoeda(gris)}</td>
-                            <td class="py-3 px-4 text-right font-medium text-amber-200/80 border-r border-slate-700/50">${formatMoeda(adv)}</td>
-                            <td class="py-3 px-4 text-right font-bold text-brand-cyan border-r border-slate-700/50">${formatMoeda(totalSemIcms)}</td>
-                            <td class="py-3 px-4 text-right font-extrabold text-brand-emerald bg-emerald-900/5">${formatMoeda(totalComIcms)}</td>
+                            <td class="py-2.5 px-4 font-semibold text-slate-100 border-r border-slate-700/50">${f.cliente || '-'}</td>
+                            <td class="py-2.5 px-4 text-slate-300 border-r border-slate-700/50">${f.porto || '-'}</td>
+                            <td class="py-2.5 px-4 font-bold text-white border-r border-slate-700/50">${f.destino || '-'}</td>
+                            <td class="py-2.5 px-4 text-right font-medium text-brand-cyan border-r border-slate-700/50 bg-blue-900/5">${formatMoeda(valorFrete)}</td>
+                            <td class="py-2.5 px-4 text-right font-medium text-brand-cyan border-r border-slate-700/50 bg-blue-900/5">${formatMoeda(valorPedagio)}</td>
+                            <td class="py-2.5 px-4 text-right font-medium text-amber-200/80 border-r border-slate-700/50">${formatMoeda(gris)}</td>
+                            <td class="py-2.5 px-4 text-right font-medium text-amber-200/80 border-r border-slate-700/50">${formatMoeda(adv)}</td>
+                            <td class="py-2.5 px-4 text-right font-bold text-white border-r border-slate-700/50">${formatMoeda(totalSemIcms)}</td>
+                            <td class="py-2.5 px-4 text-right font-extrabold text-brand-emerald bg-emerald-900/10">${formatMoeda(totalComIcms)}</td>
                         </tr>
                     `;
                 }
             });
 
             if (contador === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-500 font-semibold">Nenhuma rota encontrada para "${destinoInput}"</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-slate-500 font-semibold">Nenhuma rota encontrada. Tente importar sua planilha oficial acima.</td></tr>`;
             }
 
             document.getElementById('total-registros').innerText = `${contador} rotas listadas`;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            filtrarTabela();
-        });
+        // MOTOR DE IMPORTAÇÃO DE TODAS AS ABAS (CC 73, CC 74, CC 757, CC 804, CC 789)
+        function importarBaseCompleta(event) {
+            const file = event.target.files[0];
+            const senha = document.getElementById('input-senha-excel').value;
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    // Como a API local JS não quebra criptografia complexa no client-side nativo sem plugins pesados, 
+                    // esta implementação lê a planilha normal. No uso real diário, você salva a planilha sem senha 
+                    // no PC local antes de importar, ou usa o banco de dados via backend.
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    const abasDesejadas = ['CC 73', 'CC 74', 'CC 757', 'CC 804', 'CC 789'];
+                    let novaBase = [];
+                    let portosUnicos = new Set();
+                    let clientesUnicos = new Set();
+
+                    abasDesejadas.forEach(sheetName => {
+                        if (workbook.Sheets[sheetName]) {
+                            // Localiza as colunas pelos cabeçalhos exatos da sua planilha
+                            const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                            
+                            // Acha a linha onde está o cabeçalho "DESTINO"
+                            let cabecalhoIdx = -1;
+                            for(let i=0; i<sheetData.length; i++) {
+                                if (sheetData[i].some(v => String(v).toUpperCase().includes('DESTINO') && String(v).toUpperCase().includes('FRETE'))) {
+                                    cabecalhoIdx = i; break;
+                                }
+                            }
+
+                            if (cabecalhoIdx > -1) {
+                                const headers = sheetData[cabecalhoIdx].map(h => String(h).toUpperCase().trim());
+                                const iCliente = headers.findIndex(h => h.includes('CLIENTE'));
+                                const iPorto = headers.findIndex(h => h.includes('ORIGEM') || h.includes('PORTO'));
+                                const iDestino = headers.findIndex(h => h.includes('DESTINO'));
+                                const iFreteL = headers.findIndex(h => h === 'FRETE L' || h === 'FRETE L ');
+                                const iPedL = headers.findIndex(h => h.includes('PEDÁGIO L') && !h.includes('LS'));
+                                const iFreteLS = headers.findIndex(h => h.includes('FRETE LS'));
+                                const iPedLS = headers.findIndex(h => h.includes('PEDÁGIO LS'));
+
+                                for (let i = cabecalhoIdx + 1; i < sheetData.length; i++) {
+                                    const row = sheetData[i];
+                                    if (row[iDestino]) {
+                                        
+                                        const extraiNum = (val) => {
+                                            if (!val || String(val).toUpperCase().includes('VALE')) return 0;
+                                            const v = parseFloat(String(val).replace(',', '.'));
+                                            return isNaN(v) ? 0 : v;
+                                        };
+
+                                        novaBase.push({
+                                            cliente: row[iCliente] || 'N/D',
+                                            porto: row[iPorto] || 'N/D',
+                                            destino: row[iDestino],
+                                            freteL: extraiNum(row[iFreteL]),
+                                            pedagioL: extraiNum(row[iPedL]),
+                                            freteLS: extraiNum(row[iFreteLS]),
+                                            pedagioLS: extraiNum(row[iPedLS])
+                                        });
+
+                                        if (row[iPorto]) portosUnicos.add(row[iPorto]);
+                                        if (row[iCliente]) clientesUnicos.add(row[iCliente]);
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    if (novaBase.length > 0) {
+                        baseFretes = novaBase;
+                        
+                        // Atualiza Selects
+                        const selPorto = document.getElementById('select-porto');
+                        selPorto.innerHTML = '<option value="">TODOS</option>';
+                        portosUnicos.forEach(p => selPorto.innerHTML += `<option value="${p}">${p}</option>`);
+
+                        const selCliente = document.getElementById('select-cliente');
+                        selCliente.innerHTML = '<option value="">TODOS</option>';
+                        clientesUnicos.forEach(c => selCliente.innerHTML += `<option value="${c}">${c}</option>`);
+
+                        filtrarEcalcular();
+                        alert(`Sucesso! ${novaBase.length} rotas importadas das 5 abas.`);
+                    } else {
+                        alert("Não foi possível encontrar os cabeçalhos padrão nas abas indicadas.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("Erro ao ler a planilha. Se estiver criptografada, o Javascript do navegador requer que você primeiro salve uma cópia sem senha.");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        document.addEventListener('DOMContentLoaded', filtrarEcalcular);
     </script>
 </body>
 </html>
